@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "my-native-app",
+    "name": "Basit Sanitary App",
     "slug": "my-native-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/basitsantarylogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,12 +17,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.basitkhokhar4949.mynativeapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/splash-icon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "966dc1ea-eace-4e9f-b3c9-a0475f7c00c9"
+      }
     }
   }
 }
