@@ -261,7 +261,7 @@ app.get('/splash-image',(req,res)=>{
   })
 })
 app.get('/splash-image3',(req,res)=>{
-  const query='SELECT * FROM logo_image WHERE id =4'
+  const query='SELECT * FROM logo_image WHERE id =3'
   db.query(query,(err,result)=>{
      if(err) throw err;
      res.json(result)
