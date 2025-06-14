@@ -103,7 +103,7 @@ app.post('/signup', async (req, res) => {
   
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash password
-    const query = `INSERT INTO users (name, email, password, phone, city) VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO signup (name, email, password, phone, city) VALUES (?, ?, ?, ?, ?)`;
     
     db.query(query, [name, email, hashedPassword, phone, city], (err, result) => {
       if (err) {
@@ -140,7 +140,7 @@ app.post('/signup', async (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   console.log(email,password)
-  const query = `SELECT * FROM users WHERE email = ?`;
+  const query = `SELECT * FROM signup WHERE email = ?`;
   db.query(query, [email], async (err, result) => {
     if (err || result.length === 0) {
       console.error('User not found:', err);
