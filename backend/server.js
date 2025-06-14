@@ -508,7 +508,7 @@ app.post('/orders', async (req, res) => {
 // });
 
 app.get("/loginbg",(req,res)=>{
-  const query= "SELECT * FROM loginbg WHERE id=3";
+  const query= "SELECT * FROM loginbg WHERE id=1";
   db.query(query,(err,result)=>{
    if(err) throw err;
    res.json(result)
