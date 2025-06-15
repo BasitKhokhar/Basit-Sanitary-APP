@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Basit Sanitary App",
-    "slug": "Basit_Sanitary_App",
-     "owner": "basitkhokhar4949",
+    "slug": "basit-sanitary-app",
+    "owner": "basitkhokhar4949",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/basitsantarylogo.png",
