@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Basit Sanitary App",
+    "name": "Basit-Sanitary-App",
     "slug": "basit-sanitary-app",
     "owner": "basitkhokhar4949",
     "version": "1.0.0",
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.basitkhokhar4949.mynativeapp"
+      "package": "com.basitkhokhar4949.Basit-Sanitary-App"
     },
     "web": {
       "favicon": "./assets/splash-icon.png"
