@@ -103,7 +103,7 @@ app.post('/signup', async (req, res) => {
   
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash password
-    const query = `INSERT INTO signup (name, email, password, phone, city) VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO users (name, email, password, phone, city) VALUES (?, ?, ?, ?, ?)`;
     
     db.query(query, [name, email, hashedPassword, phone, city], (err, result) => {
       if (err) {
@@ -116,31 +116,11 @@ app.post('/signup', async (req, res) => {
     res.status(500).send({ message: 'Error hashing password' });
   }
 });
-// Login API with bcrypt password verification
-// app.post('/login', (req, res) => {
-//   const { email, password } = req.body;
-//   const query = `SELECT * FROM users WHERE email = ?`;
 
-//   db.query(query, [email], async (err, result) => {
-//     if (err || result.length === 0) {
-//       console.error('User not found:', err);
-//       return res.status(404).send({ message: 'User not found' });
-//     }
-
-//     const user = result[0];
-//     const passwordMatch = await bcrypt.compare(password, user.password); // Compare password
-
-//     if (!passwordMatch) {
-//       return res.status(400).send({ message: 'Invalid credentials' });
-//     }
-
-//     res.send({ userId: user.user_id,email: user.email, message: 'Login successful' });
-//   });
-// });
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
   console.log(email,password)
-  const query = `SELECT * FROM signup WHERE email = ?`;
+  const query = `SELECT * FROM users WHERE email = ?`;
   db.query(query, [email], async (err, result) => {
     if (err || result.length === 0) {
       console.error('User not found:', err);
