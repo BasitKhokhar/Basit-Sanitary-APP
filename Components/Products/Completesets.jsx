@@ -39,10 +39,6 @@ const TrendingProducts = () => {
   ["#A52A2A", "#B22222", "#DC143C"]  // Dark red shades
 ]
 
-
-
-
-
   useEffect(() => {
     fetch(`${API_BASE_URL}/trending_products`)
       .then((res) => res.json())
