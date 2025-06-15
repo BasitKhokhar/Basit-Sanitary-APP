@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) {
-          setBgImage(data[0].image_url); // Assuming the API response contains an `image_url`
+          setBgImage(data[0].image_url);
         }
       })
       .catch((err) => console.error("Error fetching background image:", err));

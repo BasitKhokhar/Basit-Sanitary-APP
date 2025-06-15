@@ -116,7 +116,7 @@ const OnSaleProducts = () => {
               <LinearGradient
                 colors={GRADIENT_COLORS[index % GRADIENT_COLORS.length]}
                 style={styles.gradientBackground}
-                start={{ x: -0.2, y: 0 }}  // Slightly rotated horizontally
+                start={{ x: -0.2, y: 0 }}
                 end={{ x: 1, y: 1 }} 
               >
                 <View style={styles.cardheader}>
@@ -132,12 +132,6 @@ const OnSaleProducts = () => {
                     >
                       <Text style={styles.shopNowText}>Shop Now</Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
-                      style={styles.shopNowButton}
-                      onPress={() => openProductModal(item)}
-                    >
-                      <Text style={styles.shopNowText}>Shop Now</Text>
-                    </TouchableOpacity> */}
                   </View>
                 </View>
               </LinearGradient>
