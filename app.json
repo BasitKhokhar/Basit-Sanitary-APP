@@ -5,7 +5,7 @@
     "owner": "basitkhokhar4949",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/basitsantarylogo.png",
+    "icon": "./assets/SanitaryAPPLogo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -18,17 +18,17 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splash-icon.png",
+        "foregroundImage": "./assets/SanitaryAPPLogo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.basitkhokhar4949.Basit-Sanitary-App"
+      "package": "com.basitkhokhar4949.BasitSanitaryApp"
     },
     "web": {
-      "favicon": "./assets/splash-icon.png"
+      "favicon": "./assets/SanitaryAPPLogo.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d9888f22-234f-49a8-a397-04570ace8d46"
+        "projectId": "00419d90-2f51-4972-b963-c5d1daad4b19"
       },
       "stripePublishableKey": "pk_test_51QDQ8SFwMkFMTBSOlvaQpkvAtkXcpvW94d77oG94OK83dzf23WzbkvrVU29y0HaJLP4TbWhtdnqQTxCbit7N9AuN009e4UsCVL",
       "API_BASE_URL": "https://basit-sanitary-app-production.up.railway.app"
