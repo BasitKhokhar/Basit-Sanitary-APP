@@ -27,8 +27,10 @@
     },
     "extra": {
       "eas": {
-        "projectId": "966dc1ea-eace-4e9f-b3c9-a0475f7c00c9"
-      }
+        "projectId": "d9888f22-234f-49a8-a397-04570ace8d46"
+      },
+      "stripePublishableKey": "pk_test_51QDQ8SFwMkFMTBSOlvaQpkvAtkXcpvW94d77oG94OK83dzf23WzbkvrVU29y0HaJLP4TbWhtdnqQTxCbit7N9AuN009e4UsCVL",
+      "API_BASE_URL": "https://basit-sanitary-app-production.up.railway.app"
     }
   }
 }
