@@ -30,6 +30,16 @@ db.connect((err) => {
   console.log("Connected to MySQL database");
 });
 
+app.get("/test-db", (req, res) => {
+  db.query("SELECT 1", (err, result) => {
+    if (err) {
+      console.error("DB test query failed:", err);
+      return res.status(500).send("❌ Database NOT connected");
+    }
+    res.send("✅ Database is connected");
+  });
+});
+
 app.get('/',(req,res)=>{
   return res.json("i am Basit fron backend")
 })
