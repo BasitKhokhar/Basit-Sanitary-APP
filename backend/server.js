@@ -100,7 +100,7 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 // payment cards images APi
 app.get("/images", (req, res) => {
-  db.query("SELECT * FROM cardsimages", (err, results) => {
+  db.query("SELECT * FROM creditcardsimages", (err, results) => {
       if (err) {
           return res.status(500).json({ error: err.message });
       }
@@ -546,7 +546,7 @@ app.get("/about",(req,res)=>{
   })
 })
 app.get("/about_image",(req,res)=>{
-  const query='SELECT * FROM about_image'
+  const query='SELECT * FROM logo_image WHERE id = 3'
   db.query(query,(err,result)=>{
    if(err) throw err;
    res.json(result)
