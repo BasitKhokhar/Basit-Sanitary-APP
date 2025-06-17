@@ -5,7 +5,7 @@
     "owner": "basitkhokhar4949",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/SanitaryAPPLogo.png",
+    "icon": "./assets/icon2.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
