@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image } fr
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import SocialIconsRow from "./SocialIconsRow";
+import Loader from "../Loader/Loader";
+
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const UserScreen = () => {
@@ -43,7 +45,9 @@ const UserScreen = () => {
     <View style={styles.maincontainer}>
       <View style={styles.container}>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <View style={styles.loaderContainer}>
+            <Loader />
+          </View>
         ) : userData ? (
           <View style={styles.profileContainer}>
             {/* Profile Header */}
@@ -88,12 +92,23 @@ const UserScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  maincontainer:{backgroundColor:'#1A1A1A',paddingTop:30,width:'100%',height:'100%',},
-  container: { flex: 1,backgroundColor: "#f5f5f5", padding: 16, borderTopLeftRadius:30,borderTopRightRadius:30 },
-  profileContainer: { width: "100%", height: "100%",
-   },
-  header: { flexDirection: "row", alignItems: "center",marginTop:15, marginBottom: 50, justifyContent: "space-between", width: "100%", borderRadius: 10,
-     },
+  maincontainer: { backgroundColor: '#1A1A1A', paddingTop: 30, width: '100%', height: '100%', },
+  container: { flex: 1, backgroundColor: "#f5f5f5", padding: 16, borderTopLeftRadius: 30, borderTopRightRadius: 30 },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  profileContainer: {
+    width: "100%", height: "100%",
+  },
+  header: {
+    flexDirection: "row", alignItems: "center", marginTop: 15, marginBottom: 50, justifyContent: "space-between", width: "100%", borderRadius: 10,
+  },
   title: { fontSize: 26, fontWeight: "bold", color: "#333" },
   section: { width: "100%", paddingVertical: 15, borderBottomWidth: 1, borderBottomColor: "#ddd", alignItems: "flex-start" },
   sectionText: { fontSize: 18, color: "#333" },

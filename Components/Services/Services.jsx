@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import Loader from '../Loader/Loader';
+
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const Services = () => {
@@ -28,11 +30,13 @@ const Services = () => {
     }, []);
 
     if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
+        return (<View style={styles.loaderContainer}>
+      <Loader />
+    </View>)
     }
 
     return (
-        <View style={{ paddingBottom: 75 }}>
+        <View style={{ paddingBottom: 110 }}>
             <FlatList
                 key={"single-column"} // Forces re-render when switching to single-column layout
                 data={plumbersData}
@@ -98,6 +102,15 @@ const Services = () => {
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, backgroundColor: 'black' },
+    loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
     loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     maincontainer: { backgroundColor: '#1A1A1A', paddingTop: 30 },
     servicescontainer: { backgroundColor: '#F8F9FA', borderTopLeftRadius: 0, borderTopRightRadius: 70 },
@@ -113,6 +126,7 @@ const styles = StyleSheet.create({
     image: { width: '100%', height: 150, borderRadius: 10 },
     serviceTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 10 },
     serviceDescription: { fontSize: 14, marginTop: 5, color: '#666' },
+   
     card: { flex: 1, flexDirection: "row", gap: 20, padding: 10, marginHorizontal: 15, borderWidth: 1, borderColor: '#ddd', borderRadius: 8, margin: 5, alignItems: 'center' },
     cardimage: {},
     cardright: {},

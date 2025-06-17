@@ -7,19 +7,18 @@ function Loader() {
   return (
      <View style={styles.container}>
       <LottieView
-        source={require('../../assets/loader.json')} // Replace with your own file
+        source={require('../../assets/loaderthree.json')} // Replace with your own file
         autoPlay
         loop
-        style={{ width: 100, height: 100 }}
+        style={{ width: 150, height: 150 }}
       />
     </View>
   )
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding:0,
+    // backgroundColor:'black'
   },
 });
 export default Loader

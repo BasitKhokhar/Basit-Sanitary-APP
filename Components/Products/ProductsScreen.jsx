@@ -11,6 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from "react-native-dropdown-picker";
 import ProductModal from "./ProductModal";
+import Loader from "../Loader/Loader";
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
@@ -74,7 +75,9 @@ const ProductsScreen = () => {
   const openProductModal = (product) => setSelectedProduct(product);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />;
+    return (<View style={styles.loaderContainer}>
+      <Loader />
+    </View>)
   }
 
   const renderItem = ({ item }) => (
@@ -129,13 +132,22 @@ const ProductsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  maincontainer:{backgroundColor:'#1A1A1A',paddingTop:30,width:'100%',height:'100%'},
-  container: { flex: 1, backgroundColor: '#f9f9f9',borderTopLeftRadius:30,borderTopRightRadius:30 },
+  maincontainer: { backgroundColor: '#1A1A1A', paddingTop: 30, width: '100%', height: '100%' },
+  container: { flex: 1, backgroundColor: '#f9f9f9', borderTopLeftRadius: 30, borderTopRightRadius: 30 },
   loader: { marginTop: 50 },
-  dropdownContainer: {marginHorizontal:20,marginTop:30, marginBottom: 10, zIndex: 1000,width:'90%' },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
+  dropdownContainer: { marginHorizontal: 20, marginTop: 30, marginBottom: 10, zIndex: 1000, width: '90%' },
   dropdown: { backgroundColor: "#fff", borderRadius: 10 },
   dropdownMenu: { backgroundColor: "#fff", borderRadius: 10 },
-  listContainer: { paddingHorizontal: 15, marginTop: 10 ,paddingBottom:95},
+  listContainer: { paddingHorizontal: 15, marginTop: 10, paddingBottom: 95 },
   productCard: {
     flex: 1,
     margin: 10,

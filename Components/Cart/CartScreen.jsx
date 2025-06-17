@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-
+import Loader from '../Loader/Loader';
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const CartScreen = () => {
@@ -78,7 +78,10 @@ const CartScreen = () => {
     }
   };
 
-  if (isLoading) return <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />;
+  if (isLoading) 
+  return (<View style={styles.loaderContainer}>
+      <Loader />
+    </View>)
 
   return (
     <View style={styles.maincontainer}>
@@ -140,6 +143,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f9f9f9',borderTopLeftRadius:30,borderTopRightRadius:30,marginHorizontal:10
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
   },
   header: {
     fontSize: 22,

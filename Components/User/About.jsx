@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { useNavigation } from "@react-navigation/native";
+import Loader from '../Loader/Loader';
+
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 export default function About() {
@@ -42,7 +44,9 @@ export default function About() {
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" color="#AA6231" style={styles.loader} />;
+    return <View style={styles.loaderContainer}>
+      <Loader />
+    </View>
   }
 
   return (
@@ -94,6 +98,15 @@ export default function About() {
 
 const styles = StyleSheet.create({
   container: { padding: 20, backgroundColor: '#FFF' },
+   loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
   title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, color: '#000', alignSelf:'center'},
   section: { flexDirection: 'column', gap: 10, marginBottom: 20 },
   imageContainer: { alignItems: 'center' },

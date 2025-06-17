@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ActivityIndicator, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // For icons
+import Loader from "../Loader/Loader";
 import { useNavigation } from "@react-navigation/native";
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
@@ -39,7 +40,9 @@ const FAQ = () => {
             </Text>
 
             {loading ? (
-                <ActivityIndicator size="large" color="#FFD700" />
+                <View style={{ flex: 1,justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%',borderRadius: 10,backgroundColor: '#fff',}}>
+                    <Loader />
+                </View>
             ) : (
                 faqs.map((faq, index) => (
                     <View key={faq.id} style={{ marginBottom: 10, borderRadius: 10, overflow: "hidden", backgroundColor: "#222", elevation: 4 }}>
