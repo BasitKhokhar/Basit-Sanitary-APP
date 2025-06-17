@@ -9,6 +9,7 @@ const { width, height } = Dimensions.get("window");
 const colors = ["White", "Half White", "Chrome", "Light Pink", "Light Grey", "Burgundy"];
 
 const ProductModal = ({ product, onClose, userId }) => {
+  console.log("prodcut data coming in model",product)
   const [selectedColor, setSelectedColor] = useState(null);
 
   const handleAddToCart = async () => {

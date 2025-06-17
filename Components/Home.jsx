@@ -9,6 +9,7 @@ import ImageSlider from "./Sliders/Slider";
 import UserNameDisplay from "./User/UserNameDisplay";
 import BrandSlider from "./Sliders/BrandSlider";
 import CustomerSupportoptions from "./User/CustomerSupportoptions";
+import Loader from "./Loader/Loader";
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
@@ -54,36 +55,44 @@ const HomeScreen = ({ navigation }) => {
   }, [navigation]);
 
   const sections = [
-    { key: "UserName", component: (
-      <View style={{ alignItems: "flex-start" }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          <UserNameDisplay />
-        </Text>
-      </View>
-    ) },
-    { key: "Slider", component: (
-      <View style={{ marginTop: 15 }}> 
-        <ImageSlider />
-      </View>
-    ) },
+    {
+      key: "UserName", component: (
+        <View style={{ alignItems: "flex-start" }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+            <UserNameDisplay />
+          </Text>
+        </View>
+      )
+    },
+    {
+      key: "Slider", component: (
+        <View style={{ marginTop: 15 }}>
+          <ImageSlider />
+        </View>
+      )
+    },
     { key: "products", component: <Categories /> },
     { key: "onsale", component: <OnSaleProducts /> },
     { key: "brands", component: <BrandSlider /> },
-    { key: "sets", component: (
-      <View style={{ alignItems: "" }}>
-        <Text style={{ fontSize: 20, fontWeight: "bold",textAlign:'center',marginTop:20 }}>
-         Trending Products
-        </Text>
-        <Completesets/>
-      </View>
-    ) },
-    { key: "trending", component: (
-      <View style={styles.trendingContainer}>
-        <TrendingProducts />
-      </View>
-    ) },
+    {
+      key: "sets", component: (
+        <View style={{ alignItems: "" }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: 'center', marginTop: 20 }}>
+            Trending Products
+          </Text>
+          <TrendingProducts />
+        </View>
+      )
+    },
+    {
+      key: "trending", component: (
+        <View style={styles.trendingContainer}>
+          <Completesets />
+        </View>
+      )
+    },
     { key: "Shoplocation", component: <ShopLocation /> },
-    
+
     { key: "CustomerSupportoptions", component: <CustomerSupportoptions /> },
   ];
 
@@ -105,7 +114,9 @@ const HomeScreen = ({ navigation }) => {
             </View>
             {/* Loading Indicator */}
             {loading ? (
-              <ActivityIndicator size="large" color="#FF4500" />
+              <View style={styles.loaderContainer}>
+                <Loader />
+              </View>
             ) : imageUrl ? (
               <Image source={{ uri: imageUrl }} style={styles.modalImage} />
             ) : (
@@ -136,26 +147,35 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: "90%",
-    height:'60%',
+    height: '60%',
     backgroundColor: "#fff",
     borderRadius: 10,
     alignItems: "center",
     // padding: 15,
     position: "relative",
   },
+  loaderContainer: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  borderRadius: 10,
+  backgroundColor: '#fff',
+},
   modalImage: {
     // position: "absolute",
     // top: 10,
     width: "100%",
     height: '100%',
-    resizeMode:'stretch',
+    resizeMode: 'stretch',
     borderRadius: 10,
   },
   topRight: {
     position: "absolute",
     top: -15,
     right: -10,
-    zIndex:10
+    zIndex: 10
   },
   countdownText: {
     fontSize: 20,
@@ -174,8 +194,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
-    paddingHorizontal:10,
-    paddingVertical:6
+    paddingHorizontal: 10,
+    paddingVertical: 6
   },
   listContainer: {
     paddingBottom: 120,
@@ -186,7 +206,7 @@ const styles = StyleSheet.create({
     padding: 10,
 
     // borderRadius: 10,
-   
+
   },
 });
 

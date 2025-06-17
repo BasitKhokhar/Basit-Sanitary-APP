@@ -40,7 +40,7 @@ const stripeKey = Constants.expoConfig.extra.stripePublishableKey;
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MainLayout = ({ navigation, children, cartCount, currentScreen }) => {
+const MainLayout = ({ navigation, children, currentScreen }) => {
   const [logo, setLogo] = useState(null);
 
   useEffect(() => {
@@ -93,9 +93,9 @@ const MainLayout = ({ navigation, children, cartCount, currentScreen }) => {
               size={24}
               color={currentScreen === name ? "#fff" : "gray"}
             />
-            {name === "Cart" && cartCount > 0 && (
+            {name === "Cart" > 0 && (
               <View style={styles.cartBadge}>
-                <Text style={styles.cartCount}>{cartCount}</Text>
+                {/* <Text style={styles.cartCount}></Text> */}
               </View>
             )}
             <Text
@@ -113,7 +113,7 @@ const MainLayout = ({ navigation, children, cartCount, currentScreen }) => {
   );
 };
 
-const BottomTabs = ({ cartCount }) => {
+const BottomTabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -124,35 +124,35 @@ const BottomTabs = ({ cartCount }) => {
     >
       <Tab.Screen name="Home">
         {({ navigation }) => (
-          <MainLayout navigation={navigation} cartCount={cartCount} currentScreen="Home">
+          <MainLayout navigation={navigation}  currentScreen="Home">
             <HomeScreen />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Products">
         {({ navigation }) => (
-          <MainLayout navigation={navigation} cartCount={cartCount} currentScreen="Products">
+          <MainLayout navigation={navigation}  currentScreen="Products">
             <ProductsScreen />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Cart">
         {({ navigation }) => (
-          <MainLayout navigation={navigation} cartCount={cartCount} currentScreen="Cart">
+          <MainLayout navigation={navigation}  currentScreen="Cart">
             <CartScreen />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Services">
         {({ navigation }) => (
-          <MainLayout navigation={navigation} cartCount={cartCount} currentScreen="Services">
+          <MainLayout navigation={navigation} currentScreen="Services">
             <Services />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Profile">
         {({ navigation }) => (
-          <MainLayout navigation={navigation} cartCount={cartCount} currentScreen="Profile">
+          <MainLayout navigation={navigation} currentScreen="Profile">
             <UserScreen />
           </MainLayout>
         )}
@@ -165,24 +165,24 @@ const App = () => {
 
 
   const [userId, setUserId] = useState(null);
-  const [cartCount, setCartCount] = useState(0);
+  // const [cartCount, setCartCount] = useState(0);
 
-  useEffect(() => {
-    if (userId) {
-      const interval = setInterval(() => fetchCartCount(userId), 5000);
-      return () => clearInterval(interval);
-    }
-  }, [userId]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     const interval = setInterval(() => fetchCartCount(userId), 5000);
+  //     return () => clearInterval(interval);
+  //   }
+  // }, [userId]);
 
-  const fetchCartCount = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/cart/${id}`);
-      const data = await response.json();
-      setCartCount(data.length);
-    } catch (error) {
-      console.error("Error fetching cart count:", error);
-    }
-  };
+  // const fetchCartCount = async (id) => {
+  //   try {
+  //     const response = await fetch(`${API_BASE_URL}/cart/${id}`);
+  //     const data = await response.json();
+  //     setCartCount(data.length);
+  //   } catch (error) {
+  //     console.error("Error fetching cart count:", error);
+  //   }
+  // };
 
   const [isSplash1Visible, setIsSplash1Visible] = useState(true);
   const [isSplash2Visible, setIsSplash2Visible] = useState(false);
@@ -212,7 +212,7 @@ const App = () => {
             {(props) => <LoginScreen {...props} setUserId={setUserId} />}
           </Stack.Screen>
           <Stack.Screen name="Main" options={{ headerShown: false }}>
-            {(props) => <BottomTabs {...props} cartCount={cartCount} />}
+            {(props) => <BottomTabs {...props}  />}
           </Stack.Screen>
           <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: "Checkout" }} />
           <Stack.Screen name="AddressScreen" component={AddressScreen} />
@@ -285,6 +285,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
   },
-  cartCount: { color: "white", fontWeight: "bold" },
+  // cartCount: { color: "white", fontWeight: "bold" },
 });
 

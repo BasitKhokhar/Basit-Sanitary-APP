@@ -10,19 +10,19 @@ export default () => ({
     icon: "./assets/icon2.png",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/SanitaryAPPLogo.png",
+      image: "./assets/icon2.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff"
     },
     android: {
       package: "com.basitkhokhar.sanitaryapp",
       adaptiveIcon: {
-        foregroundImage: "./assets/SanitaryAPPLogo.png",
+        foregroundImage: "./assets/icon2.png",
         backgroundColor: "#ffffff"
       }
     },
     web: {
-      favicon: "./assets/SanitaryAPPLogo.png"
+      favicon: "./assets/icon2.png"
     },
     plugins: [
       "expo-secure-store",
