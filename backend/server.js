@@ -458,44 +458,6 @@ app.post('/orders', async (req, res) => {
       });
   });
 });
-// app.post('/orders', (req, res) => {
-//   console.log('📥 Incoming API Request:', req.body); // Log received data
-//   const { user_id, name, phone, city, address, receipt_url, subtotal, shipping_charges, total_amount, cart_items } = req.body;
-
-//   if (!user_id || !name || !phone || !city || !address || !subtotal || !shipping_charges || !total_amount || !cart_items) {
-//     return res.status(400).json({ error: 'All fields are required' });
-//   }
-//   // Insert order details into the apporders table
-//   const insertOrderQuery = `
-//     INSERT INTO apporders (user_id, name, phone, city, address, receipt_url, subtotal, shipping_charges, total_amount) 
-//     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-//   db.query(insertOrderQuery, [user_id, name, phone, city, address, receipt_url, subtotal, shipping_charges, total_amount], (err, result) => {
-//     if (err) {
-//       console.error('❌ Order Insertion Error:', err);
-//       return res.status(500).json({ error: 'Database error while inserting order' });
-//     }
-
-//     const order_id = result.insertId;
-//     console.log('✅ Order Inserted with ID:', order_id);
-
-//     // Insert each cart item into the apporder_items table
-//     const insertItemsQuery = `
-//       INSERT INTO apporder_items (order_id, name, quantity, price) VALUES ?`;
-
-//     const cartItemsData = cart_items.map(item => [order_id, item.name, item.quantity, item.price]);
-
-//     db.query(insertItemsQuery, [cartItemsData], (err, itemResult) => {
-//       if (err) {
-//         console.error('❌ Cart Items Insertion Error:', err);
-//         return res.status(500).json({ error: 'Database error while inserting cart items' });
-//       }
-
-//       console.log('✅ Cart Items Inserted:', itemResult.affectedRows);
-//       res.status(201).json({ message: 'Order placed successfully', order_id });
-//     });
-//   });
-// });
 
 app.get("/loginbg",(req,res)=>{
   const query= "SELECT * FROM loginbg WHERE id=1";
@@ -651,26 +613,6 @@ app.get('/api/users/:userId', (req, res) => {
   });
 });
 
-
-// app.post('/orders', (req, res) => {
-//   const { orderId, userId, userName, totalAmount, shippingCost, finalTotal, totalItems, orderDate } = req.body;
-
-//   const sql = `
-//     INSERT INTO orders (order_id, user_id, user_name, total_amount, shipping_cost, final_total, total_items, order_date)
-//     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-//   `;
-
-//   const values = [orderId, userId, userName, totalAmount, shippingCost, finalTotal, totalItems, orderDate];
-
-//   db.query(sql, values, (error, result) => {
-//     if (error) {
-//       console.error('Error storing order:', error);
-//       return res.status(500).json({ message: 'Failed to store order data.' });
-//     }
-//     res.status(200).json({ message: 'Order successfully stored!' });
-//   });
-// });
-
   // footer APIS start //
   app.get('/contact_list',(req,res)=>{
     const query= 'SELECT * FROM contact_list'
@@ -716,7 +658,4 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-// const PORT = 5004;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
+
