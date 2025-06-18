@@ -13,9 +13,9 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import ProductModal from "./ProductModal";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 
-const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
+const API_BASE_URL = Constants.expoConfig?.extra?.API_BASE_URL || "";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
@@ -27,47 +27,68 @@ const TrendingProducts = () => {
   const position = useRef(new Animated.ValueXY()).current;
 
   const gradients = [
-  ["#1A1A1A", "#4B4B4B", "#696969"], // Dark gray shades
-  ["#8A2BE2", "#9370DB", "#BA55D3"], // Purple shades
-  ["#0000FF", "#4169E1", "#00BFFF"], // Blue shades
-  ["#87CEEB", "#4682B4", "#1E90FF"], // Sky blue shades
-  ["#00CED1", "#20B2AA", "#40E0D0"], // Teal shades
-  ["#008000", "#32CD32", "#00FA9A"], // Green shades
-  ["#2F4F4F", "#556B2F", "#6B8E23"], // Earthy green/brown shades
-  ["#FFD700", "#FFA500", "#FF8C00"], // Yellow-orange shades
-  ["#FF4500", "#FF6347", "#FF7F50"], // Red-orange shades
-  ["#A52A2A", "#B22222", "#DC143C"]  // Dark red shades
-]
+    ["#1A1A1A", "#4B4B4B", "#696969"],
+    ["#8A2BE2", "#9370DB", "#BA55D3"],
+    ["#0000FF", "#4169E1", "#00BFFF"],
+    ["#87CEEB", "#4682B4", "#1E90FF"],
+    ["#00CED1", "#20B2AA", "#40E0D0"],
+    ["#008000", "#32CD32", "#00FA9A"],
+    ["#2F4F4F", "#556B2F", "#6B8E23"],
+    ["#FFD700", "#FFA500", "#FF8C00"],
+    ["#FF4500", "#FF6347", "#FF7F50"],
+    ["#A52A2A", "#B22222", "#DC143C"],
+  ];
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/trending_products`)
-      .then((res) => res.json())
-      .then((data) => {
-        // Assign gradient colors based on the original index
-        const productsWithGradient = data.map((product, index) => ({
-          ...product,
-          gradient: gradients[index % gradients.length],
-        }));
-        setProducts(productsWithGradient);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch products", err);
-        setLoading(false);
-      });
+    let isMounted = true;
 
-    const getUserId = async () => {
-      const id = await AsyncStorage.getItem("userId");
-      setUserId(id);
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/trending_products`);
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          const withGradients = data
+            .filter(item => item?.id && item?.image_url && item?.name) // minimal safe check
+            .map((product, index) => ({
+              ...product,
+              gradient: gradients[index % gradients.length],
+            }));
+          if (isMounted) setProducts(withGradients);
+        }
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
     };
-    getUserId();
+
+    const loadUserId = async () => {
+      try {
+        const id = await AsyncStorage.getItem("userId");
+        if (isMounted) setUserId(id);
+      } catch (err) {
+        console.error("Error loading user ID:", err);
+      }
+    };
+
+    fetchProducts();
+    loadUserId();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (_, gesture) => {
-        position.setValue({ x: gesture.dx, y: gesture.dy });
+        try {
+          position.setValue({ x: gesture.dx, y: gesture.dy });
+        } catch (e) {
+          console.error("Gesture error:", e);
+        }
       },
       onPanResponderRelease: (_, gesture) => {
         if (Math.abs(gesture.dx) > 120) {
@@ -77,7 +98,7 @@ const TrendingProducts = () => {
             useNativeDriver: false,
           }).start(() => {
             position.setValue({ x: 0, y: 0 });
-            setProducts((prev) => {
+            setProducts(prev => {
               const updated = [...prev];
               const first = updated.shift();
               updated.push(first);
@@ -103,40 +124,38 @@ const TrendingProducts = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}></Text>
       {products.map((item, index) => {
         const isTopCard = index === 0;
-
         const animatedStyle = isTopCard
           ? {
-            transform: [
-              {
-                rotate: position.x.interpolate({
-                  inputRange: [-200, 0, 200],
-                  outputRange: ["-10deg", "0deg", "10deg"],
-                })
-              },
-              ...position.getTranslateTransform(),
-            ],
-          }
+              transform: [
+                {
+                  rotate: position.x.interpolate({
+                    inputRange: [-200, 0, 200],
+                    outputRange: ["-10deg", "0deg", "10deg"],
+                  }),
+                },
+                ...position.getTranslateTransform(),
+              ],
+            }
           : {
-            top: index * 5,
-            zIndex: -index,
-          };
+              top: index * 5,
+              zIndex: -index,
+            };
 
         return (
           <Animated.View
-            key={item.id}
+            key={item.id?.toString() || `${index}`}
             {...(isTopCard ? panResponder.panHandlers : {})}
             style={[styles.card, animatedStyle]}
           >
-            <LinearGradient
-              colors={item.gradient} // Use the gradient from the product object
-              style={styles.cardBackground}
-            >
-              {/* Wrap Image in View for better control */}
+            <LinearGradient colors={item.gradient} style={styles.cardBackground}>
               <View style={styles.imageContainer}>
-                <Image source={{ uri: item.image_url }} style={styles.image} />
+                <Image
+                  source={{ uri: item.image_url }}
+                  style={styles.image}
+                  onError={() => console.warn("Image failed to load for:", item.name)}
+                />
               </View>
               <View style={styles.cardInfo}>
                 <Text style={styles.name}>{item.name}</Text>
@@ -151,11 +170,7 @@ const TrendingProducts = () => {
         );
       })}
       {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={closeProductModal}
-          userId={userId}
-        />
+        <ProductModal product={selectedProduct} onClose={closeProductModal} userId={userId} />
       )}
     </View>
   );
@@ -164,18 +179,22 @@ const TrendingProducts = () => {
 const styles = StyleSheet.create({
   loader: { marginTop: 50 },
   container: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     marginTop: 20,
-    marginBottom: 50,
-    // borderWidth: 2,
-    // borderColor: 'black',
+    marginBottom: 100,
+    marginTop:50,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 150,
+    paddingTop: 150, 
   },
-  heading: { fontSize: 20, fontWeight: "bold", marginBottom: 20, color: "black" },
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "black",
+  },
   card: {
     position: "absolute",
     width: SCREEN_WIDTH * 0.87,
@@ -183,53 +202,49 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "space-between",
-    // paddingVertical: 15,
-    
   },
   cardBackground: {
     width: "100%",
     height: "100%",
     borderRadius: 10,
-    // paddingVertical: 15,
-    // justifyContent: "space-between",
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems:'center'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
-  // Image container for better control of positioning
   imageContainer: {
     width: "60%",
     height: "80%",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    // borderWidth: 2,
-    // borderColor: 'black',
-    paddingHorizontal: 15
+    paddingHorizontal: 15,
   },
   image: {
     width: "100%",
     height: "100%",
     borderWidth: 2,
-    borderColor: 'white',
+    borderColor: "white",
     borderRadius: 10,
-    resizeMode: 'stretch', // Can adjust the image fit style here (contain, cover, stretch, etc.)
+    resizeMode: "stretch",
   },
-  cardInfo: { display: 'flex', flexDirection: 'column', paddingHorizontal: 15 },
-  name: { fontSize: 14, fontWeight: "bold", color: 'white' },
-  stock: { fontSize: 14, fontWeight: "bold", color: 'white' },
-  price: { fontSize: 16, fontWeight: "bold", color: 'white' },
+  cardInfo: {
+    display: "flex",
+    flexDirection: "column",
+    paddingHorizontal: 15,
+  },
+  name: { fontSize: 14, fontWeight: "bold", color: "white" },
+  stock: { fontSize: 14, fontWeight: "bold", color: "white" },
+  price: { fontSize: 16, fontWeight: "bold", color: "white" },
   button: {
     marginTop: 10,
     backgroundColor: "#1A1A1A",
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderWidth:2,
-    borderColor:'white',
+    borderWidth: 2,
+    borderColor: "white",
     borderRadius: 5,
   },
-  buttonText: { color: "#fff", fontWeight: "bold", textAlign: 'center' },
+  buttonText: { color: "#fff", fontWeight: "bold", textAlign: "center" },
 });
-
 
 export default TrendingProducts;

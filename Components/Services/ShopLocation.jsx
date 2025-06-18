@@ -3,27 +3,29 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 const ShopLocation = () => {
-  const shopLatitude = 32.063720; // Replace with your shop's latitude
-  const shopLongitude = 72.693895; // Replace with your shop's longitude
+  const shopLatitude = 32.063720;
+  const shopLongitude = 72.693895;
 
   return (
     <View style={styles.container}>
       {/* <Text style={styles.heading}>Our Shop Location</Text> */}
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: shopLatitude,
-          longitude: shopLongitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
-        }}
-      >
-        <Marker
-          coordinate={{ latitude: shopLatitude, longitude: shopLongitude }}
-          title="Basit Sanitary"
-          description="Visit us here!"
-        />
-      </MapView>
+      <View style={styles.mapContainer}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: shopLatitude,
+            longitude: shopLongitude,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+        >
+          <Marker
+            coordinate={{ latitude: shopLatitude, longitude: shopLongitude }}
+            title="Basit Sanitary"
+            description="Visit us here!"
+          />
+        </MapView>
+      </View>
     </View>
   );
 };
@@ -31,24 +33,33 @@ const ShopLocation = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent:"center",
-    // marginHorizontal:20,
+    justifyContent: 'center',
     paddingTop: Platform.OS === 'ios' ? 50 : 20,
     backgroundColor: '#1A1A1A',
-    // borderRadius:10
   },
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
-    // marginBottom: 10,
+    color: '#fff',
+    marginBottom: 15,
+  },
+  mapContainer: {
+    width: '90%',
+    height: 300,
+    alignSelf: 'center',
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#ccc',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    marginBottom: 20,
   },
   map: {
     flex: 1,
-    alignSelf:'center',
-    width:'90%',
-    height: 300,
-    borderRadius:10,marginBottom:20
   },
 });
 

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Modal, Image, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View, Text, FlatList, StyleSheet, Modal, Image,
+  TouchableOpacity, ActivityIndicator
+} from "react-native";
 import OnSaleProducts from "./Products/OnSaleProducts";
 import Completesets from "./Products/Completesets";
 import TrendingProducts from "./Products/TrendingProducts";
@@ -11,7 +14,8 @@ import BrandSlider from "./Sliders/BrandSlider";
 import CustomerSupportoptions from "./User/CustomerSupportoptions";
 import Loader from "./Loader/Loader";
 import Constants from 'expo-constants';
-const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
+
+const API_BASE_URL = Constants?.expoConfig?.extra?.API_BASE_URL || "";
 const API_URL = `${API_BASE_URL}/api/sale-image`;
 
 const HomeScreen = ({ navigation }) => {
@@ -20,77 +24,76 @@ const HomeScreen = ({ navigation }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [showCloseButton, setShowCloseButton] = useState(false);
+
   useEffect(() => {
-    if (navigation) {
-      navigation.setOptions({ headerShown: false });
-    }
+    if (navigation) navigation.setOptions({ headerShown: false });
+
     fetch(API_URL)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
-        setImageUrl(data.imageUrl);
+        if (data?.imageUrl) setImageUrl(data.imageUrl);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching image:", error);
+      .catch((err) => {
+        console.log("Image fetch error:", err.message);
         setLoading(false);
       });
-    // Countdown Timer
+
     const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === 1) {
+      setCountdown(prev => {
+        if (prev <= 1) {
           clearInterval(interval);
-          setShowCloseButton(true); 
+          setShowCloseButton(true);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [navigation]);
+  }, []);
+
+  const safeRender = (Component) => {
+    try {
+      return <Component />;
+    } catch (err) {
+      console.error(`Component error: ${Component.name}`, err);
+      return null;
+    }
+  };
+
   const sections = [
     {
-      key: "UserName", component: (
+      key: "UserName",
+      component: (
         <View style={{ alignItems: "flex-start" }}>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            <UserNameDisplay />
+            {safeRender(UserNameDisplay)}
           </Text>
         </View>
       )
     },
+    { key: "Slider", component: <View style={{ marginTop: 15 }}>{safeRender(ImageSlider)}</View> },
+    { key: "products", component: safeRender(Categories) },
+    { key: "onsale", component: safeRender(OnSaleProducts) },
+    { key: "brands", component: safeRender(BrandSlider) },
     {
-      key: "Slider", component: (
-        <View style={{ marginTop: 15 }}>
-          <ImageSlider />
+      key: "trending",
+      component: (
+        <View>
+          <Text style={styles.sectionTitle}>Trending Products</Text>
+          {safeRender(TrendingProducts)}
         </View>
       )
     },
-    { key: "products", component: <Categories /> },
-    { key: "onsale", component: <OnSaleProducts /> },
-    { key: "brands", component: <BrandSlider /> },
-    {
-      key: "sets", component: (
-        <View style={{ alignItems: "" }}>
-          <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: 'center', marginTop: 20 }}>
-            Trending Products
-          </Text>
-          <TrendingProducts />
-        </View>
-      )
-    },
-    {
-      key: "trending", component: (
-        <View style={styles.trendingContainer}>
-          <Completesets />
-        </View>
-      )
-    },
-    { key: "Shoplocation", component: <ShopLocation /> },
-
-    { key: "CustomerSupportoptions", component: <CustomerSupportoptions /> },
+    { key: "accessorysets", component: <View style={styles.trendingContainer}>{safeRender(Completesets)}</View> },
+    { key: "Shoplocation", component: safeRender(ShopLocation) },
+    { key: "CustomerSupportoptions", component: safeRender(CustomerSupportoptions) },
   ];
 
   return (
     <View style={{ flex: 1 }}>
+      {/* Initial Modal */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -108,24 +111,30 @@ const HomeScreen = ({ navigation }) => {
                 <Loader />
               </View>
             ) : imageUrl ? (
-              <Image source={{ uri: imageUrl }} style={styles.modalImage} />
+              <Image
+                source={{ uri: imageUrl }}
+                style={styles.modalImage}
+                onError={() => setImageUrl("")}
+              />
             ) : (
               <Text>No Image Available</Text>
             )}
           </View>
         </View>
       </Modal>
-      {/* Home Screen Content */}
+
+      {/* Main Content */}
       <FlatList
         data={sections}
-        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => item.component}
         keyExtractor={(item) => item.key}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
       />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -139,21 +148,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     alignItems: "center",
-    // padding: 15,
     position: "relative",
   },
   loaderContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  height: '100%',
-  borderRadius: 10,
-  backgroundColor: '#fff',
-},
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+    backgroundColor: '#fff',
+  },
   modalImage: {
-    // position: "absolute",
-    // top: 10,
     width: "100%",
     height: '100%',
     resizeMode: 'stretch',
@@ -172,11 +178,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     backgroundColor: "#FF6347",
-    borderRadius: '50%',
-    // width: 30,
-    // height: 30,
-    // justifyContent: "center",
-    // alignItems: "center",
+    borderRadius: 999,
   },
   closeText: {
     color: "#fff",
@@ -192,37 +194,13 @@ const styles = StyleSheet.create({
   trendingContainer: {
     marginBottom: 0,
     padding: 10,
-
-    // borderRadius: 10,
-
   },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: 'center',
+    marginTop: 20
+  }
 });
 
 export default HomeScreen;
-
-// import React from "react";
-// import { View, Text, StyleSheet } from "react-native";
-
-// const HomeScreen = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.text}>Home Screen is Working</Text>
-//     </View>
-//   );
-// };
-
-// export default HomeScreen;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "#fff",
-//   },
-//   text: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//     color: "#333",
-//   },
-// });

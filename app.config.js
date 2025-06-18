@@ -10,15 +10,14 @@ export default () => ({
     icon: "./assets/icon2.png",
     userInterfaceStyle: "light",
     splash: {
-      image: "./assets/icon2.png",
+      image: "./assets/icons.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff"
     },
     android: {
       package: "com.basitkhokhar.sanitaryapp",
       adaptiveIcon: {
-        foregroundImage: "./assets/icon2.png",
-        backgroundColor: "#ffffff"
+        foregroundImage: "./assets/icons.png",
       }
     },
     web: {

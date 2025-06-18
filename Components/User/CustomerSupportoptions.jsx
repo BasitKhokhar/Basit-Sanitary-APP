@@ -10,10 +10,10 @@ const icons = ["car", "life-ring", "rotate-right", "lock"];
 
 // Gradient colors for each card
 const gradients = [
-  ['#FF5733', '#FF8D33'], // Orange-Red
-  ['#FC466B', '#3F5EFB'], // Pink to Indigo
-  ['#3357FF', '#338DFF'], // Blue
-  ['#FF33A8', '#FF3380'], // Pink
+  ['#FF5733', '#FF8D33'], 
+  ['#FC466B', '#3F5EFB'], 
+  ['#3357FF', '#338DFF'], 
+  ['#FF33A8', '#FF3380'],
 ];
 
 const CustomerSupportOptions = () => {
@@ -27,15 +27,14 @@ const CustomerSupportOptions = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch data from separate APIs
       const response1 = await fetch(`${API_BASE_URL}/first_column_data`);
       const data1 = await response1.json();
 
       const response2 = await fetch(`${API_BASE_URL}/second_column_data`);
       const data2 = await response2.json();
 
-      setFirstColumnData(data1);
-      setSecondColumnData(data2);
+      setFirstColumnData(Array.isArray(data1) ? data1 : []);
+      setSecondColumnData(Array.isArray(data2) ? data2 : []);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -47,19 +46,25 @@ const CustomerSupportOptions = () => {
     return <ActivityIndicator size="large" color="#282828" style={styles.loader} />;
   }
 
+  const getSafeGradient = (index) =>
+    gradients[index % gradients.length] || ['#000', '#111'];
+
+  const getSafeIcon = (index) =>
+    icons[index % icons.length] || 'info-circle';
+
   return (
     <View style={styles.container}>
       {/* First Column */}
       <View style={styles.column}>
         {firstColumnData.map((item, index) => (
           <LinearGradient
-            colors={gradients[index % gradients.length]} // Assign gradient based on index
+            colors={getSafeGradient(index)}
             style={[styles.card, index === 0 ? styles.tallCard : styles.shortCard]}
-            key={item.id}
+            key={item.id || index}
           >
-            <FontAwesome name={icons[index]} size={40} color="#fff" style={styles.icon} />
-            <Text style={styles.heading}>{item.headings}</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <FontAwesome name={getSafeIcon(index)} size={40} color="#fff" style={styles.icon} />
+            <Text style={styles.heading}>{item.headings || "No Title"}</Text>
+            <Text style={styles.description}>{item.description || "No Description"}</Text>
           </LinearGradient>
         ))}
       </View>
@@ -68,13 +73,13 @@ const CustomerSupportOptions = () => {
       <View style={styles.column}>
         {secondColumnData.map((item, index) => (
           <LinearGradient
-            colors={gradients[(index + 2) % gradients.length]} // Assign gradient based on index
+            colors={getSafeGradient(index + 2)}
             style={[styles.card, index === 0 ? styles.shortCard : styles.tallCard]}
-            key={item.id}
+            key={item.id || index}
           >
-            <FontAwesome name={icons[index + 2]} size={40} color="#fff" style={styles.icon} />
-            <Text style={styles.heading}>{item.headings}</Text>
-            <Text style={styles.description}>{item.description}</Text>
+            <FontAwesome name={getSafeIcon(index + 2)} size={40} color="#fff" style={styles.icon} />
+            <Text style={styles.heading}>{item.headings || "No Title"}</Text>
+            <Text style={styles.description}>{item.description || "No Description"}</Text>
           </LinearGradient>
         ))}
       </View>
@@ -86,7 +91,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // backgroundColor: '#282828',
     padding: 16,
     flex: 1,
   },
@@ -99,13 +103,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5, // Shadow effect
+    elevation: 5,
   },
   tallCard: {
-    height: 220, // Taller card
+    height: 220,
   },
   shortCard: {
-    height: 170, // Shorter card
+    height: 170,
   },
   icon: {
     marginBottom: 10,

@@ -21,39 +21,45 @@ const ITEM_WIDTH = width * 0.8;
 const ITEM_HEIGHT = 200;
 const SPACING = 0;
 const CENTER_OFFSET = (width - ITEM_WIDTH) / 2;
-const GRADIENT_COLORS =[
-  ["#1A1A1A", "#4B4B4B", "#696969"], // Dark gray shades
-  ["#8A2BE2", "#9370DB", "#BA55D3"], // Purple shades
-  ["#0000FF", "#4169E1", "#00BFFF"], // Blue shades
-  ["#87CEEB", "#4682B4", "#1E90FF"], // Sky blue shades
-  ["#00CED1", "#20B2AA", "#40E0D0"], // Teal shades
-  ["#008000", "#32CD32", "#00FA9A"], // Green shades
-  ["#2F4F4F", "#556B2F", "#6B8E23"], // Earthy green/brown shades
-  ["#FFD700", "#FFA500", "#FF8C00"], // Yellow-orange shades
-  ["#FF4500", "#FF6347", "#FF7F50"], // Red-orange shades
-  ["#A52A2A", "#B22222", "#DC143C"]  // Dark red shades
+
+const GRADIENT_COLORS = [
+  ["#1A1A1A", "#4B4B4B", "#696969"],
+  ["#8A2BE2", "#9370DB", "#BA55D3"],
+  ["#0000FF", "#4169E1", "#00BFFF"],
+  ["#87CEEB", "#4682B4", "#1E90FF"],
+  ["#00CED1", "#20B2AA", "#40E0D0"],
+  ["#008000", "#32CD32", "#00FA9A"],
+  ["#2F4F4F", "#556B2F", "#6B8E23"],
+  ["#FFD700", "#FFA500", "#FF8C00"],
+  ["#FF4500", "#FF6347", "#FF7F50"],
+  ["#A52A2A", "#B22222", "#DC143C"],
 ];
 
-
- // ["#FF4500", "#FF6347", "#DC143C"], // Red shades
 const OnSaleProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/onsale_products`)
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/onsale_products`);
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.warn("Unexpected API response format");
+        }
+      } catch (error) {
         console.error("Error fetching products:", error);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchProducts();
   }, []);
 
   useEffect(() => {
@@ -82,12 +88,20 @@ const OnSaleProducts = () => {
     return <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />;
   }
 
+  if (!products.length) {
+    return (
+      <View style={{ paddingVertical: 40, alignItems: 'center' }}>
+        <Text style={{ color: 'gray', fontSize: 16 }}>No sale products available.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>On Sale Products</Text>
       <Animated.FlatList
         data={products}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         snapToInterval={ITEM_WIDTH}
@@ -111,16 +125,29 @@ const OnSaleProducts = () => {
             extrapolate: "clamp",
           });
 
+          const gradient = GRADIENT_COLORS[index % GRADIENT_COLORS.length];
+          const imageFailed = imageErrors[item.id];
+
           return (
             <Animated.View style={[styles.productCard, { transform: [{ scale }] }]}>
               <LinearGradient
-                colors={GRADIENT_COLORS[index % GRADIENT_COLORS.length]}
+                colors={gradient}
                 style={styles.gradientBackground}
                 start={{ x: -0.2, y: 0 }}
-                end={{ x: 1, y: 1 }} 
+                end={{ x: 1, y: 1 }}
               >
                 <View style={styles.cardheader}>
-                  <Image source={{ uri: item.image_url }} style={styles.productImage} />
+                  {!imageFailed ? (
+                    <Image
+                      source={{ uri: item.image_url }}
+                      style={styles.productImage}
+                      onError={() => setImageErrors(prev => ({ ...prev, [item.id]: true }))}
+                    />
+                  ) : (
+                    <View style={[styles.productImage, { backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center' }]}>
+                      <Text style={{ color: 'white', fontSize: 10 }}>Image Error</Text>
+                    </View>
+                  )}
                   <View style={styles.imagedata}>
                     <Text style={styles.productName}>{item.name}</Text>
                     <Text style={styles.productStock}>Stock: {item.stock}</Text>
@@ -139,14 +166,16 @@ const OnSaleProducts = () => {
           );
         }}
       />
-      {selectedProduct && <ProductModal product={selectedProduct} onClose={closeProductModal} userId={userId} />}
+      {selectedProduct && (
+        <ProductModal product={selectedProduct} onClose={closeProductModal} userId={userId} />
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   loader: { marginTop: 50 },
-  container: {  paddingVertical: 20 },
+  container: { paddingVertical: 20 },
   heading: {
     fontSize: 20,
     fontWeight: "bold",
@@ -170,12 +199,32 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "center",
   },
-  cardheader: { flexDirection: "row",justifyContent:'space-between', alignItems: "center",paddingHorizontal:10 },
-  productImage: { width: 140, height: 140, borderRadius: 5,borderWidth:2,borderColor:'white' },
-  imagedata:{display:'flex',flexDirection:'column', width:'40%'},
+  cardheader: {
+    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: "center",
+    paddingHorizontal: 10
+  },
+  productImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: 'white'
+  },
+  imagedata: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '40%',
+  },
   productName: { fontSize: 14, fontWeight: "bold", color: "#fff", marginTop: 5 },
   productStock: { fontSize: 12, color: "#fff" },
-  productPrice: { fontSize: 16, fontWeight: "bold", color: "red", textDecorationLine: "line-through" },
+  productPrice: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "red",
+    textDecorationLine: "line-through"
+  },
   newProductPrice: { fontSize: 16, fontWeight: "bold", color: "#fff" },
   shopNowButton: {
     marginTop: 8,
@@ -183,9 +232,9 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 5,
-    borderWidth:2
+    borderWidth: 2
   },
-  shopNowText: { color: "black", fontSize: 14, fontWeight: "bold",textAlign:'center' },
+  shopNowText: { color: "black", fontSize: 14, fontWeight: "bold", textAlign: 'center' },
 });
 
 export default OnSaleProducts;

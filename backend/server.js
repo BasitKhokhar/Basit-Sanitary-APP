@@ -146,7 +146,7 @@ app.post('/login', (req, res) => {
       userId: user.user_id,
       email: user.email,
     };
-    const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' }); // 1-hour expiration
+    const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '30d' }); // 1-hour expiration
     res.send({
       userId: user.user_id,
       email: user.email,

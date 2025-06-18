@@ -31,6 +31,8 @@ import About from "./Components/User/About";
 import StripePayment from "./Components/Cart/StripePayment";
 import LogoutScreen from "./Components/User/LogoutScreen";
 import 'react-native-gesture-handler';
+import * as SecureStore from 'expo-secure-store';
+
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const stripeKey = Constants.expoConfig.extra.stripePublishableKey;
@@ -115,21 +117,21 @@ const BottomTabs = () => {
     >
       <Tab.Screen name="Home">
         {({ navigation }) => (
-          <MainLayout navigation={navigation}  currentScreen="Home">
+          <MainLayout navigation={navigation} currentScreen="Home">
             <HomeScreen />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Products">
         {({ navigation }) => (
-          <MainLayout navigation={navigation}  currentScreen="Products">
+          <MainLayout navigation={navigation} currentScreen="Products">
             <ProductsScreen />
           </MainLayout>
         )}
       </Tab.Screen>
       <Tab.Screen name="Cart">
         {({ navigation }) => (
-          <MainLayout navigation={navigation}  currentScreen="Cart">
+          <MainLayout navigation={navigation} currentScreen="Cart">
             <CartScreen />
           </MainLayout>
         )}
@@ -153,40 +155,59 @@ const BottomTabs = () => {
 };
 const App = () => {
   const [userId, setUserId] = useState(null);
-  // const [cartCount, setCartCount] = useState(0);
-  // useEffect(() => {
-  //   if (userId) {
-  //     const interval = setInterval(() => fetchCartCount(userId), 5000);
-  //     return () => clearInterval(interval);
-  //   }
-  // }, [userId]);
-  // const fetchCartCount = async (id) => {
-  //   try {
-  //     const response = await fetch(`${API_BASE_URL}/cart/${id}`);
-  //     const data = await response.json();
-  //     setCartCount(data.length);
-  //   } catch (error) {
-  //     console.error("Error fetching cart count:", error);
-  //   }
-  // };
+  const [checkingLogin, setCheckingLogin] = useState(true);
   const [isSplash1Visible, setIsSplash1Visible] = useState(true);
   const [isSplash2Visible, setIsSplash2Visible] = useState(false);
+
   useEffect(() => {
-    setTimeout(() => {
-      setIsSplash1Visible(false);
-      setIsSplash2Visible(true);
-    }, 5000);
+    const checkLogin = async () => {
+      try {
+        const token = await SecureStore.getItemAsync("jwt_token");
+        const storedUserId = await AsyncStorage.getItem("userId");
+
+        if (token && storedUserId) {
+          setUserId(storedUserId);
+        }
+      } catch (error) {
+        console.error("Error checking login:", error);
+      } finally {
+        setCheckingLogin(false);
+      }
+    };
+
+    checkLogin();
   }, []);
 
+  useEffect(() => {
+    const splashFlow = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      setIsSplash1Visible(false);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      setIsSplash2Visible(false);
+    };
+
+    splashFlow();
+  }, []);
+
+  // Show splash screens if still visible
   if (isSplash1Visible) {
     return <SplashScreen1 />;
   }
+
   if (isSplash2Visible) {
     return <SplashScreen2 onNext={() => setIsSplash2Visible(false)} />;
   }
+
+  // Wait for login check to complete
+  if (checkingLogin) {
+    return <SplashScreen />;
+  }
+
   return (
-    <StripeProvider publishableKey={stripeKey }
-    merchantDisplayName="Basit Sanitary App">
+    <StripeProvider
+      publishableKey={stripeKey}
+      merchantDisplayName="Basit Sanitary App"
+    >
       <NavigationContainer>
         <Stack.Navigator initialRouteName={userId ? "Main" : "Login"}>
           <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
@@ -194,7 +215,7 @@ const App = () => {
             {(props) => <LoginScreen {...props} setUserId={setUserId} />}
           </Stack.Screen>
           <Stack.Screen name="Main" options={{ headerShown: false }}>
-            {(props) => <BottomTabs {...props}  />}
+            {(props) => <BottomTabs {...props} />}
           </Stack.Screen>
           <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: "Checkout" }} />
           <Stack.Screen name="AddressScreen" component={AddressScreen} />
@@ -220,17 +241,18 @@ const App = () => {
 };
 
 export default App;
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     backgroundColor: "#1A1A1A",
-    paddingTop:30,
+    paddingTop: 30,
     padding: 20,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  logo: { width: 100, height: 40, resizeMode: "contain",backgroundColor:'#1A1A1A' },
+  logo: { width: 100, height: 40, resizeMode: "contain", backgroundColor: '#1A1A1A' },
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -248,13 +270,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "#1A1A1A",
     paddingTop: 15,
-    paddingBottom:35,
+    paddingBottom: 35,
     position: "absolute",
     bottom: 0,
     width: "100%",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-   
+
   },
   footerButton: { alignItems: "center" },
   footerText: { fontSize: 12, fontWeight: "bold", marginTop: 5 },
