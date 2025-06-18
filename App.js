@@ -31,10 +31,7 @@ import About from "./Components/User/About";
 import StripePayment from "./Components/Cart/StripePayment";
 import LogoutScreen from "./Components/User/LogoutScreen";
 import 'react-native-gesture-handler';
-
-
 import Constants from 'expo-constants';
-
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const stripeKey = Constants.expoConfig.extra.stripePublishableKey;
 const Stack = createStackNavigator();
@@ -57,10 +54,8 @@ const MainLayout = ({ navigation, children, currentScreen }) => {
     };
     fetchLogo();
   }, []);
-
   return (
     <View style={styles.container}>
-      {/* Header with Search Bar */}
       <View style={styles.header}>
         {logo && <Image source={{ uri: logo }} style={styles.logo} />}
         <TouchableOpacity
@@ -71,10 +66,7 @@ const MainLayout = ({ navigation, children, currentScreen }) => {
           <Icon name="search" size={20} color="#555" style={styles.searchIcon} />
         </TouchableOpacity>
       </View>
-
       <View style={styles.body}>{children}</View>
-
-      {/* Footer Navigation */}
       <View style={styles.footer}>
         {[
           { name: "Home", icon: "home" },
@@ -112,7 +104,6 @@ const MainLayout = ({ navigation, children, currentScreen }) => {
     </View>
   );
 };
-
 const BottomTabs = () => {
   return (
     <Tab.Navigator
@@ -160,20 +151,15 @@ const BottomTabs = () => {
     </Tab.Navigator>
   );
 };
-
 const App = () => {
-
-
   const [userId, setUserId] = useState(null);
   // const [cartCount, setCartCount] = useState(0);
-
   // useEffect(() => {
   //   if (userId) {
   //     const interval = setInterval(() => fetchCartCount(userId), 5000);
   //     return () => clearInterval(interval);
   //   }
   // }, [userId]);
-
   // const fetchCartCount = async (id) => {
   //   try {
   //     const response = await fetch(`${API_BASE_URL}/cart/${id}`);
@@ -183,10 +169,8 @@ const App = () => {
   //     console.error("Error fetching cart count:", error);
   //   }
   // };
-
   const [isSplash1Visible, setIsSplash1Visible] = useState(true);
   const [isSplash2Visible, setIsSplash2Visible] = useState(false);
-
   useEffect(() => {
     setTimeout(() => {
       setIsSplash1Visible(false);
@@ -197,11 +181,9 @@ const App = () => {
   if (isSplash1Visible) {
     return <SplashScreen1 />;
   }
-
   if (isSplash2Visible) {
     return <SplashScreen2 onNext={() => setIsSplash2Visible(false)} />;
   }
-
   return (
     <StripeProvider publishableKey={stripeKey }
     merchantDisplayName="Basit Sanitary App">

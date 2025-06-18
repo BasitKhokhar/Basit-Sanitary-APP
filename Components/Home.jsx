@@ -12,8 +12,7 @@ import CustomerSupportoptions from "./User/CustomerSupportoptions";
 import Loader from "./Loader/Loader";
 import Constants from 'expo-constants';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
-
-const API_URL = `${API_BASE_URL}/api/sale-image`; // Replace with your backend IP
+const API_URL = `${API_BASE_URL}/api/sale-image`;
 
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
@@ -21,13 +20,10 @@ const HomeScreen = ({ navigation }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [showCloseButton, setShowCloseButton] = useState(false);
-
   useEffect(() => {
     if (navigation) {
       navigation.setOptions({ headerShown: false });
     }
-
-    // Fetch image from backend
     fetch(API_URL)
       .then((response) => response.json())
       .then((data) => {
@@ -38,22 +34,19 @@ const HomeScreen = ({ navigation }) => {
         console.error("Error fetching image:", error);
         setLoading(false);
       });
-
     // Countdown Timer
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev === 1) {
           clearInterval(interval);
-          setShowCloseButton(true); // Show close button after countdown
+          setShowCloseButton(true); 
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(interval);
   }, [navigation]);
-
   const sections = [
     {
       key: "UserName", component: (
@@ -98,11 +91,9 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Modal for Image Display */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Countdown Timer or Close Button */}
             <View style={styles.topRight}>
               {!showCloseButton ? (
                 <Text style={styles.countdownText}>{countdown}</Text>
@@ -112,7 +103,6 @@ const HomeScreen = ({ navigation }) => {
                 </TouchableOpacity>
               )}
             </View>
-            {/* Loading Indicator */}
             {loading ? (
               <View style={styles.loaderContainer}>
                 <Loader />
@@ -125,7 +115,6 @@ const HomeScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-
       {/* Home Screen Content */}
       <FlatList
         data={sections}
@@ -137,7 +126,6 @@ const HomeScreen = ({ navigation }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -211,3 +199,30 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+// import React from "react";
+// import { View, Text, StyleSheet } from "react-native";
+
+// const HomeScreen = () => {
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.text}>Home Screen is Working</Text>
+//     </View>
+//   );
+// };
+
+// export default HomeScreen;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#fff",
+//   },
+//   text: {
+//     fontSize: 20,
+//     fontWeight: "bold",
+//     color: "#333",
+//   },
+// });
