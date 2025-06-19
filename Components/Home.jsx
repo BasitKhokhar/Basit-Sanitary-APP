@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   View, Text, FlatList, StyleSheet, Modal, Image,
-  TouchableOpacity, ActivityIndicator
+  TouchableOpacity
 } from "react-native";
 import OnSaleProducts from "./Products/OnSaleProducts";
 import Completesets from "./Products/Completesets";
@@ -24,19 +24,43 @@ const HomeScreen = ({ navigation }) => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [showCloseButton, setShowCloseButton] = useState(false);
+  const [isImageChecked, setIsImageChecked] = useState(false);
 
   useEffect(() => {
-    if (navigation) navigation.setOptions({ headerShown: false });
+    console.log("🏁 HomeScreen mounted");
 
-    fetch(API_URL)
-      .then((res) => res.json())
+    if (navigation) {
+      navigation.setOptions({ headerShown: false });
+      console.log("🔧 Navigation header hidden");
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // timeout safety
+
+    console.log("🖼️ Starting fetch for sales image from:", API_URL);
+
+    fetch(API_URL, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error("❌ API error: " + res.status);
+        return res.json();
+      })
       .then((data) => {
-        if (data?.imageUrl) setImageUrl(data.imageUrl);
-        setLoading(false);
+        if (data?.imageUrl) {
+          console.log("✅ Sales image URL fetched:", data.imageUrl);
+          setImageUrl(data.imageUrl);
+        } else {
+          console.log("⚠️ No imageUrl found in API response");
+        }
       })
       .catch((err) => {
-        console.log("Image fetch error:", err.message);
+        console.log("🚨 Image fetch error:", err.message);
+        setImageUrl("");
+      })
+      .finally(() => {
+        clearTimeout(timeoutId);
         setLoading(false);
+        setIsImageChecked(true);
+        console.log("🎯 Sales image check completed — ready to render sections");
       });
 
     const interval = setInterval(() => {
@@ -50,15 +74,21 @@ const HomeScreen = ({ navigation }) => {
       });
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeoutId);
+      controller.abort();
+      console.log("🧹 Cleaned up timers and fetch controller");
+    };
   }, []);
 
   const safeRender = (Component) => {
     try {
+      console.log(`📦 Rendering component: ${Component.name}`);
       return <Component />;
     } catch (err) {
-      console.error(`Component error: ${Component.name}`, err);
-      return null;
+      console.error(`❗ Error in ${Component.name}:`, err);
+      return <Text style={{ color: 'red' }}>Error loading {Component.name}</Text>;
     }
   };
 
@@ -66,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
     {
       key: "UserName",
       component: (
-        <View style={{ alignItems: "flex-start" }}>
+        <View>
           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
             {safeRender(UserNameDisplay)}
           </Text>
@@ -93,7 +123,6 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Initial Modal */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -114,7 +143,10 @@ const HomeScreen = ({ navigation }) => {
               <Image
                 source={{ uri: imageUrl }}
                 style={styles.modalImage}
-                onError={() => setImageUrl("")}
+                onError={() => {
+                  console.log("🖼️ Image load error");
+                  setImageUrl("");
+                }}
               />
             ) : (
               <Text>No Image Available</Text>
@@ -123,14 +155,18 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* Main Content */}
-      <FlatList
-        data={sections}
-        renderItem={({ item }) => item.component}
-        keyExtractor={(item) => item.key}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
+      {isImageChecked && (
+        <FlatList
+          data={sections}
+          renderItem={({ item }) => {
+            console.log("🔄 Rendering section:", item.key);
+            return item.component;
+          }}
+          keyExtractor={(item) => item.key}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
     </View>
   );
 };
