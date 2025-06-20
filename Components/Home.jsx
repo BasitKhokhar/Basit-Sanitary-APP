@@ -1,9 +1,107 @@
-import React from "react";
+// import React from "react";
+// import {
+//   View,
+//   Text,
+//   FlatList,
+//   StyleSheet,
+// } from "react-native";
+// import OnSaleProducts from "./Products/OnSaleProducts";
+// import Completesets from "./Products/Completesets";
+// import TrendingProducts from "./Products/TrendingProducts";
+// import ShopLocation from "./Services/ShopLocation";
+// import Categories from "./Categories/Categories";
+// import ImageSlider from "./Sliders/Slider";
+// import UserNameDisplay from "./User/UserNameDisplay";
+// import BrandSlider from "./Sliders/BrandSlider";
+// import CustomerSupportoptions from "./User/CustomerSupportoptions";
+
+// const HomeScreen = ({ navigation }) => {
+//   React.useEffect(() => {
+//     if (navigation) {
+//       navigation.setOptions({ headerShown: false });
+//     }
+//   }, []);
+
+//   const safeRender = (Component) => {
+//     try {
+//       return <Component />;
+//     } catch (err) {
+//       console.error(`Error in ${Component.name}:`, err);
+//       return <Text style={{ color: 'red' }}>Error loading {Component.name}</Text>;
+//     }
+//   };
+
+//   const sections = [
+//     {
+//       key: "UserName",
+//       component: (
+//         <View>
+//           <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+//             {safeRender(UserNameDisplay)}
+//           </Text>
+//         </View>
+//       )
+//     },
+//     { key: "Slider", component: <View style={{ marginTop: 15 }}>{safeRender(ImageSlider)}</View> },
+//     { key: "products", component: safeRender(Categories) },
+//     { key: "onsale", component: safeRender(OnSaleProducts) },
+//     { key: "brands", component: safeRender(BrandSlider) },
+//     {
+//       key: "trending",
+//       component: (
+//         <View>
+//           <Text style={styles.sectionTitle}>Trending Products</Text>
+//           {safeRender(TrendingProducts)}
+//         </View>
+//       )
+//     },
+//     {
+//       key: "accessorysets",
+//       component: <View style={styles.trendingContainer}>{safeRender(Completesets)}</View>
+//     },
+//     { key: "Shoplocation", component: safeRender(ShopLocation) },
+//     { key: "CustomerSupportoptions", component: safeRender(CustomerSupportoptions) },
+//   ];
+
+//   return (
+//     <View style={{ flex: 1 }}>
+//       <FlatList
+//         data={sections}
+//         renderItem={({ item }) => item.component}
+//         keyExtractor={(item) => item.key}
+//         showsVerticalScrollIndicator={false}
+//         contentContainerStyle={styles.listContainer}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   listContainer: {
+//     paddingBottom: 120,
+//     backgroundColor: "#F8F9FA",
+//   },
+//   trendingContainer: {
+//     marginBottom: 0,
+//     padding: 10,
+//   },
+//   sectionTitle: {
+//     fontSize: 20,
+//     fontWeight: "bold",
+//     textAlign: 'center',
+//     marginTop: 20
+//   }
+// });
+
+// export default HomeScreen;
+
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import OnSaleProducts from "./Products/OnSaleProducts";
 import Completesets from "./Products/Completesets";
@@ -14,86 +112,140 @@ import ImageSlider from "./Sliders/Slider";
 import UserNameDisplay from "./User/UserNameDisplay";
 import BrandSlider from "./Sliders/BrandSlider";
 import CustomerSupportoptions from "./User/CustomerSupportoptions";
+import Loader from "./Loader/Loader";
+import Constants from "expo-constants";
+const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const HomeScreen = ({ navigation }) => {
-  React.useEffect(() => {
+  const [loading, setLoading] = useState(true);
+  const [homeData, setHomeData] = useState({
+    sliderData: [],
+    categoryData: [],
+    onSaleProducts: [],
+    trendingProducts: [],
+    completeSets: [],
+    brandData: [],
+    firstColumnData: [],
+    secondColumnData: [],
+  });
+
+  useEffect(() => {
     if (navigation) {
       navigation.setOptions({ headerShown: false });
     }
   }, []);
 
-  const safeRender = (Component) => {
-    try {
-      return <Component />;
-    } catch (err) {
-      console.error(`Error in ${Component.name}:`, err);
-      return <Text style={{ color: 'red' }}>Error loading {Component.name}</Text>;
-    }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const endpoints = [
+          { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
+          { key: "categoryData", url: `${API_BASE_URL}/categories` },
+          { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
+          { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
+          { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
+          { key: "brandData", url: `${API_BASE_URL}/brands` },
+          { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
+          { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
+        ];
+
+        const responses = await Promise.all(
+          endpoints.map((endpoint) =>
+            fetch(endpoint.url)
+              .then((res) => res.json())
+              .then((data) => ({ key: endpoint.key, data }))
+              .catch(() => ({ key: endpoint.key, data: [] }))
+          )
+        );
+
+        const updated = responses.reduce((acc, { key, data }) => {
+          acc[key] = data;
+          return acc;
+        }, {});
+
+        setHomeData(updated);
+      } catch (error) {
+        console.error("Home data fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+console.log("homedata",homeData)
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Loader />
+      </View>
+    );
+  }
 
   const sections = [
-    {
-      key: "UserName",
-      component: (
-        <View>
-          <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-            {safeRender(UserNameDisplay)}
-          </Text>
-        </View>
-      )
-    },
-    { key: "Slider", component: <View style={{ marginTop: 15 }}>{safeRender(ImageSlider)}</View> },
-    { key: "products", component: safeRender(Categories) },
-    { key: "onsale", component: safeRender(OnSaleProducts) },
-    { key: "brands", component: safeRender(BrandSlider) },
+    { key: "user", render: () => <UserNameDisplay /> },
+    { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
+    { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
+    { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
+    { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
     {
       key: "trending",
-      component: (
-        <View>
+      render: () => (
+        <>
           <Text style={styles.sectionTitle}>Trending Products</Text>
-          {safeRender(TrendingProducts)}
-        </View>
-      )
+          <TrendingProducts products={homeData.trendingProducts} />
+        </>
+      ),
     },
     {
-      key: "accessorysets",
-      component: <View style={styles.trendingContainer}>{safeRender(Completesets)}</View>
+      key: "completeSets",
+      render: () => <Completesets sets={homeData.completeSets} />,
     },
-    { key: "Shoplocation", component: safeRender(ShopLocation) },
-    { key: "CustomerSupportoptions", component: safeRender(CustomerSupportoptions) },
+    { key: "location", render: () => <ShopLocation /> },
+    {
+      key: "support",
+      render: () => (
+        <CustomerSupportoptions
+          firstColumnData={homeData.firstColumnData}
+          secondColumnData={homeData.secondColumnData}
+        />
+      ),
+    },
   ];
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={sections}
-        renderItem={({ item }) => item.component}
-        keyExtractor={(item) => item.key}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContainer}
-      />
-    </View>
+    <FlatList
+      data={sections}
+      keyExtractor={(item) => item.key}
+      renderItem={({ item }) => <View>{item.render()}</View>}
+      contentContainerStyle={styles.listContainer}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
 const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   listContainer: {
     paddingBottom: 120,
     backgroundColor: "#F8F9FA",
   },
-  trendingContainer: {
-    marginBottom: 0,
-    padding: 10,
-  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: 'center',
-    marginTop: 20
-  }
+    textAlign: "center",
+    marginTop: 20,
+  },
 });
 
 export default HomeScreen;
+
+
+
 
 // import React, { useEffect, useState } from "react";
 // import {

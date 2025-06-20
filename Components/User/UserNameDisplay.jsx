@@ -65,6 +65,7 @@ const UserNameDisplay = () => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
+    height:250,
     width: "100%",
     paddingTop: 20,
     paddingBottom: 70,
