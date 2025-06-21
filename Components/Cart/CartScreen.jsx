@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    maxHeight: 430,
+    maxHeight: 400,
   },
   cartItem: {
     flexDirection: 'row',

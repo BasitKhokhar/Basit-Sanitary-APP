@@ -17,7 +17,7 @@ export default () => ({
     android: {
       package: "com.basitkhokhar.sanitaryapp",
       adaptiveIcon: {
-        foregroundImage: "./assets/icons.png",
+        foregroundImage: "./assets/iconss.png",
       }
     },
     web: {

@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: {
     backgroundColor: "#1A1A1A",
-    paddingTop: 30,
+    paddingTop: 15,
     padding: 20,
     alignItems: "center",
     flexDirection: "row",
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     backgroundColor: "#1A1A1A",
     paddingTop: 15,
-    paddingBottom: 35,
+    paddingBottom: 15,
     position: "absolute",
     bottom: 0,
     width: "100%",

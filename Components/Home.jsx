@@ -119,7 +119,7 @@ const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [homeData, setHomeData] = useState({
-    // sliderData: [],
+    sliderData: [],
     // categoryData: [],
     // onSaleProducts: [],
     // trendingProducts: [],
@@ -139,7 +139,7 @@ const HomeScreen = ({ navigation }) => {
     const fetchData = async () => {
       try {
         const endpoints = [
-          // { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
+          { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
           // { key: "categoryData", url: `${API_BASE_URL}/categories` },
           // { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
           // { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
@@ -184,7 +184,7 @@ console.log("homedata",homeData)
 
   const sections = [
     { key: "user", render: () => <UserNameDisplay /> },
-    // { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
+    { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
     // { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
     // { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
     // { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
