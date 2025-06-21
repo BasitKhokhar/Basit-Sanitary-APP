@@ -203,7 +203,7 @@ console.log("homedata",homeData)
       key: "completeSets",
       render: () => <Completesets sets={homeData.completeSets} />,
     },
-    // { key: "location", render: () => <ShopLocation /> },
+    { key: "location", render: () => <ShopLocation /> },
     // {
     //   key: "support",
     //   render: () => (
