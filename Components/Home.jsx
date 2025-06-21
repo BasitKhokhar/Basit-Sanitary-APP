@@ -119,14 +119,14 @@ const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [homeData, setHomeData] = useState({
-    sliderData: [],
-    categoryData: [],
-    onSaleProducts: [],
-    trendingProducts: [],
-    completeSets: [],
-    brandData: [],
-    firstColumnData: [],
-    secondColumnData: [],
+    // sliderData: [],
+    // categoryData: [],
+    // onSaleProducts: [],
+    // trendingProducts: [],
+    // completeSets: [],
+    // brandData: [],
+    // firstColumnData: [],
+    // secondColumnData: [],
   });
 
   useEffect(() => {
@@ -139,14 +139,14 @@ const HomeScreen = ({ navigation }) => {
     const fetchData = async () => {
       try {
         const endpoints = [
-          { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
-          { key: "categoryData", url: `${API_BASE_URL}/categories` },
-          { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
-          { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
-          { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
-          { key: "brandData", url: `${API_BASE_URL}/brands` },
-          { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
-          { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
+          // { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
+          // { key: "categoryData", url: `${API_BASE_URL}/categories` },
+          // { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
+          // { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
+          // { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
+          // { key: "brandData", url: `${API_BASE_URL}/brands` },
+          // { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
+          // { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
         ];
 
         const responses = await Promise.all(
@@ -184,33 +184,33 @@ console.log("homedata",homeData)
 
   const sections = [
     { key: "user", render: () => <UserNameDisplay /> },
-    { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
-    { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
-    { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
-    { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
-    {
-      key: "trending",
-      render: () => (
-        <>
-          <Text style={styles.sectionTitle}>Trending Products</Text>
-          <TrendingProducts products={homeData.trendingProducts} />
-        </>
-      ),
-    },
-    {
-      key: "completeSets",
-      render: () => <Completesets sets={homeData.completeSets} />,
-    },
-    { key: "location", render: () => <ShopLocation /> },
-    {
-      key: "support",
-      render: () => (
-        <CustomerSupportoptions
-          firstColumnData={homeData.firstColumnData}
-          secondColumnData={homeData.secondColumnData}
-        />
-      ),
-    },
+    // { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
+    // { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
+    // { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
+    // { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
+    // {
+    //   key: "trending",
+    //   render: () => (
+    //     <>
+    //       <Text style={styles.sectionTitle}>Trending Products</Text>
+    //       <TrendingProducts products={homeData.trendingProducts} />
+    //     </>
+    //   ),
+    // },
+    // {
+    //   key: "completeSets",
+    //   render: () => <Completesets sets={homeData.completeSets} />,
+    // },
+    // { key: "location", render: () => <ShopLocation /> },
+    // {
+    //   key: "support",
+    //   render: () => (
+    //     <CustomerSupportoptions
+    //       firstColumnData={homeData.firstColumnData}
+    //       secondColumnData={homeData.secondColumnData}
+    //     />
+    //   ),
+    // },
   ];
 
   return (

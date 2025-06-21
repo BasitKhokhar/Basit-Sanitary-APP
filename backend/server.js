@@ -572,7 +572,7 @@ app.get("/first_column_data", (req, res) => {
 });
 
 app.get("/second_column_data", (req, res) => {
-  const query = 'SELECT * FROM customer_supportoptions LIMIT 100 OFFSET 2'; // Change 100 to desired number
+  const query = 'SELECT * FROM customer_supportoptions LIMIT 100 OFFSET 2'; 
   db.query(query, (err, result) => {
     if (err) {
       console.error("Error fetching next rows:", err);
