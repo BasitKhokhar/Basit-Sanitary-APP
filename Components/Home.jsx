@@ -120,11 +120,12 @@ const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [homeData, setHomeData] = useState({
     sliderData: [],
-    // categoryData: [],
-    // onSaleProducts: [],
-    // trendingProducts: [],
-    // completeSets: [],
-    // brandData: [],
+    categoryData: [],
+    brandData: [],
+    onSaleProducts: [],
+    trendingProducts: [],
+    completeSets: [],
+    
     // firstColumnData: [],
     // secondColumnData: [],
   });
@@ -140,11 +141,12 @@ const HomeScreen = ({ navigation }) => {
       try {
         const endpoints = [
           { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
-          // { key: "categoryData", url: `${API_BASE_URL}/categories` },
-          // { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
-          // { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
-          // { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
-          // { key: "brandData", url: `${API_BASE_URL}/brands` },
+          { key: "categoryData", url: `${API_BASE_URL}/categories` },
+          { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
+           { key: "brandData", url: `${API_BASE_URL}/brands` },
+          { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
+          { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
+         
           // { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
           // { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
         ];
@@ -185,22 +187,22 @@ console.log("homedata",homeData)
   const sections = [
     { key: "user", render: () => <UserNameDisplay /> },
     { key: "slider", render: () => <ImageSlider sliderData={homeData.sliderData} /> },
-    // { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
-    // { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
-    // { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
-    // {
-    //   key: "trending",
-    //   render: () => (
-    //     <>
-    //       <Text style={styles.sectionTitle}>Trending Products</Text>
-    //       <TrendingProducts products={homeData.trendingProducts} />
-    //     </>
-    //   ),
-    // },
-    // {
-    //   key: "completeSets",
-    //   render: () => <Completesets sets={homeData.completeSets} />,
-    // },
+    { key: "categories", render: () => <Categories categoriesData={homeData.categoryData} /> },
+    { key: "onSale", render: () => <OnSaleProducts products={homeData.onSaleProducts} /> },
+    { key: "brands", render: () => <BrandSlider brands={homeData.brandData} /> },
+    {
+      key: "trending",
+      render: () => (
+        <>
+          <Text style={styles.sectionTitle}>Trending Products</Text>
+          <TrendingProducts products={homeData.trendingProducts} />
+        </>
+      ),
+    },
+    {
+      key: "completeSets",
+      render: () => <Completesets sets={homeData.completeSets} />,
+    },
     // { key: "location", render: () => <ShopLocation /> },
     // {
     //   key: "support",
@@ -214,13 +216,17 @@ console.log("homedata",homeData)
   ];
 
   return (
-    <FlatList
-      data={sections}
-      keyExtractor={(item) => item.key}
-      renderItem={({ item }) => <View>{item.render()}</View>}
-      contentContainerStyle={styles.listContainer}
-      showsVerticalScrollIndicator={false}
-    />
+   <FlatList
+  data={sections}
+  keyExtractor={(item) => item.key}
+  renderItem={({ item }) => <View>{item.render()}</View>}
+  contentContainerStyle={styles.listContainer}
+  showsVerticalScrollIndicator={false}
+  initialNumToRender={2} // only first 2 sections are rendered initially
+  windowSize={5} // loads items within 5 screens (ahead & behind)
+  maxToRenderPerBatch={3} // max render per batch
+  updateCellsBatchingPeriod={100} // wait time between batches
+/>
   );
 };
 

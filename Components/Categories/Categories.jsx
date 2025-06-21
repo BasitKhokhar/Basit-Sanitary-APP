@@ -229,7 +229,7 @@ const Categories = ({ categoriesData }) => {
 
   return (
     <View
-      style={{ flex: 1, backgroundColor: '#F8F9FA', paddingVertical: 20 }}
+      style={{ flex: 1, backgroundColor: '#F8F9FA', paddingVertical: 10 }}
     >
       <Text
         style={{

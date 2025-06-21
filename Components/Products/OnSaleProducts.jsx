@@ -390,7 +390,7 @@ const OnSaleProducts = ({ products }) => {
 
 const styles = StyleSheet.create({
   loader: { marginTop: 50 },
-  container: { paddingVertical: 20 },
+  container: { paddingBottom: 30 },
   heading: {
     fontSize: 20,
     fontWeight: "bold",

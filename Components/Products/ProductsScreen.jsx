@@ -115,6 +115,13 @@ const ProductsScreen = () => {
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           renderItem={renderItem}
+
+          initialNumToRender={10}            // Load first 10 items initially
+          maxToRenderPerBatch={10}           // Render 10 items per batch
+          updateCellsBatchingPeriod={100}    // Wait 100ms between batches
+          windowSize={7}                     // Number of screens to render ahead/behind
+          removeClippedSubviews={true}
+
           contentContainerStyle={styles.listContainer}
         />
 

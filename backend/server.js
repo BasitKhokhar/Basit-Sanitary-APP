@@ -45,7 +45,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/complete_acessory_sets', (req, res) => {
-  const query = 'SELECT * FROM products WHERE subcategory_id = 16 LIMIT 2';
+  const query = 'SELECT * FROM products WHERE subcategory_id = 16';
   db.query(query, (err, results) => {
     if (err) {
       console.error('Query error:', err);
