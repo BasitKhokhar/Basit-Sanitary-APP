@@ -126,8 +126,8 @@ const HomeScreen = ({ navigation }) => {
     trendingProducts: [],
     completeSets: [],
     
-    // firstColumnData: [],
-    // secondColumnData: [],
+    firstColumnData: [],
+    secondColumnData: [],
   });
 
   useEffect(() => {
@@ -147,8 +147,8 @@ const HomeScreen = ({ navigation }) => {
           { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
           { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
          
-          // { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
-          // { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
+          { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
+          { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
         ];
 
         const responses = await Promise.all(
@@ -203,16 +203,16 @@ console.log("homedata",homeData)
       key: "completeSets",
       render: () => <Completesets sets={homeData.completeSets} />,
     },
-    { key: "location", render: () => <ShopLocation /> },
-    // {
-    //   key: "support",
-    //   render: () => (
-    //     <CustomerSupportoptions
-    //       firstColumnData={homeData.firstColumnData}
-    //       secondColumnData={homeData.secondColumnData}
-    //     />
-    //   ),
-    // },
+    // { key: "location", render: () => <ShopLocation /> },
+    {
+      key: "support",
+      render: () => (
+        <CustomerSupportoptions
+          firstColumnData={homeData.firstColumnData}
+          secondColumnData={homeData.secondColumnData}
+        />
+      ),
+    },
   ];
 
   return (

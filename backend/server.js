@@ -65,7 +65,7 @@ app.get('/complete_acessory_sets', (req, res) => {
 //       return res.status(400).send({ error: "Invalid amount provided" });
 //     }
 
-//     // Create a Payment Intent
+
 //     const paymentIntent = await stripe.paymentIntents.create({
 //       amount: Math.round(amount * 100), // Convert to cents
 //       currency,
