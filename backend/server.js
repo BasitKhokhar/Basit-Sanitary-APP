@@ -485,20 +485,43 @@ app.get("/products",(req,res)=>{
    })
 })
 // This APi is for trnding products //
-app.get("/trending_products",(req,res)=>{
-  const query='SELECT * FROM trending_products'
-  db.query(query,(err,result)=>{
-   if(err) throw err;
-   res.json(result)
-  })
-})
-app.get("/onsale_products",(req,res)=>{
-  const query='SELECT * FROM onsale_products'
-  db.query(query,(err,result)=>{
-   if(err) throw err;
-   res.json(result)
-  })
-})
+app.get("/trending_products", (req, res) => {
+  const query = `
+    SELECT p.* 
+    FROM trending_products t
+    JOIN products p ON t.product_id = p.id
+    ORDER BY t.added_at DESC
+  `;
+  
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error("Error fetching trending products:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.json(result);
+  });
+});
+
+app.get("/onsale_products", (req, res) => {
+  const query = `
+    SELECT 
+      p.*, 
+      o.New_price, 
+      o.added_at 
+    FROM onsale_products o
+    JOIN products p ON o.product_id = p.id
+    ORDER BY o.added_at DESC
+  `;
+
+  db.query(query, (err, result) => {
+    if (err) {
+      console.error("Error fetching on-sale products:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+    res.json(result);
+  });
+});
+
 //  About page realted APIS //
 app.get("/about",(req,res)=>{
   const query='SELECT * FROM about'
