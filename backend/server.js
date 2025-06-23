@@ -506,9 +506,9 @@ app.get("/onsale_products", (req, res) => {
   const query = `
     SELECT 
       p.*, 
-      o.new_price, 
+      o.New_price, 
       o.added_at 
-    FROM onsale_products o
+    FROM on_sale_products o
     JOIN products p ON o.product_id = p.id
     ORDER BY o.added_at DESC
   `;
