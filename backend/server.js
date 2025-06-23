@@ -56,7 +56,7 @@ app.get('/complete_acessory_sets', (req, res) => {
   });
 });
 
-// app.post("/create-payment-intent", async (req, res) => {
+
 //   try {
 //     const { amount, currency = "usd", metadata } = req.body;
 
