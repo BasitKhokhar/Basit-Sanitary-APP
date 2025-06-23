@@ -506,7 +506,7 @@ app.get("/onsale_products", (req, res) => {
   const query = `
     SELECT 
       p.*, 
-      o.New_price, 
+      o.new_price, 
       o.added_at 
     FROM onsale_products o
     JOIN products p ON o.product_id = p.id
