@@ -522,7 +522,7 @@ app.get("/onsale_products", (req, res) => {
   });
 });
 
-//  About page realted APIS 
+//  About page realted APi
 app.get("/about",(req,res)=>{
   const query='SELECT * FROM about'
   db.query(query,(err,result)=>{
