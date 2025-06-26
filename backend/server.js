@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 
-// MySQL Connection
+// MySQL Connect
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
