@@ -45,7 +45,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/complete_acessory_sets', (req, res) => {
-  const query = 'SELECT * FROM products WHERE subcategory_id = 16';
+  const query = 'SELECT * FROM products WHERE subcategory_id = 10';
   db.query(query, (err, results) => {
     if (err) {
       console.error('Query error:', err);
@@ -250,6 +250,7 @@ app.get('/splash-image',(req,res)=>{
      res.json(result)
   })
 })
+// Regitstration screen splash image
 app.get('/splash-image3',(req,res)=>{
   const query='SELECT * FROM logo_image WHERE id =3'
   db.query(query,(err,result)=>{
