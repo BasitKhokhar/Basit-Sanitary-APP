@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView,RefreshControl } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import SocialIconsRow from "./SocialIconsRow";
@@ -17,94 +17,106 @@ const UserScreen = () => {
   const navigation = useNavigation();
 
   const fetchUserData = async () => {
-      try {
-        const storedUserId = await AsyncStorage.getItem("userId");
-        console.log("User ID in UserScreen is:", storedUserId);
+    try {
+      const storedUserId = await AsyncStorage.getItem("userId");
+      console.log("User ID in UserScreen is:", storedUserId);
+      if (storedUserId) {
 
-        if (storedUserId) {
-        
-          const response = await fetch(`${API_BASE_URL}/users/${storedUserId}`);
-          if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-          const data = await response.json();
-          setUserData(data);
+        const response = await fetch(`${API_BASE_URL}/users/${storedUserId}`);
+        if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+        const data = await response.json();
+        setUserData(data);
 
-          const imageResponse = await fetch(`${API_BASE_URL}/user_images/${storedUserId}`);
-          if (imageResponse.ok) {
-            const imageData = await imageResponse.json();
-            console.log("Fetched user image:", imageData.image_url);
-            setUserImage(imageData.image_url);
-          } else {
-            console.log("User image fetch failed.");
-          }
+        const imageResponse = await fetch(`${API_BASE_URL}/user_images/${storedUserId}`);
+        if (imageResponse.ok) {
+          const imageData = await imageResponse.json();
+          console.log("Fetched user image:", imageData.image_url);
+          setUserImage(imageData.image_url);
+        } else {
+          console.log("User image fetch failed.");
         }
-      } catch (error) {
-        console.error("Error fetching user data or image:", error);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching user data or image:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
   }, []);
 
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchUserData();
+    setRefreshing(false);
+  };
+
   console.log("userImage in UserScreen:", userImage);
 
   return (
-    <View style={styles.maincontainer}>
-      <View style={styles.container}>
-        {loading ? (
-          <View style={styles.loaderContainer}>
-            <Loader />
-          </View>
-        ) : userData ? (
-          <View style={styles.profileContainer}>
-            {/* Profile Header */}
-            <View style={styles.header}>
-              <Text style={styles.title}>{userData.name}</Text>
-              <View style={styles.imageContainer}>
-                {userImage && typeof userImage === 'string' && userImage.startsWith('http') ? (
-                  <Image
-                    source={{ uri: userImage }}
-                    style={styles.profileImage}
-                    onError={() => {
-                      console.log("Image load failed, setting fallback.");
-                      setUserImage(null);
-                    }}
-                  />
-                ) : (
-                  <View style={styles.defaultProfileCircle} />
-                )}
-              </View>
-            </View>
-
-            {/* Navigation Sections */}
-            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("AccountDetail", { userData })}>
-              <Text style={styles.sectionText}>Account Detail</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("CustomerSupport")}>
-              <Text style={styles.sectionText}>Customer Support</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("faq")}>
-              <Text style={styles.sectionText}>FAQs</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("about")}>
-              <Text style={styles.sectionText}>About</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.section, styles.logout]} onPress={() => navigation.navigate("Logout")}>
-              <Text style={styles.sectionText}>Logout</Text>
-            </TouchableOpacity>
-
-            <View style={styles.iconscontainer}>
-              <SocialIconsRow />
+  <View style={styles.maincontainer}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
+      showsVerticalScrollIndicator={false}
+    >
+      {loading ? (
+        <View style={styles.loaderContainer}>
+          <Loader />
+        </View>
+      ) : userData ? (
+        <View style={styles.profileContainer}>
+          {/* Profile Header */}
+          <View style={styles.header}>
+            <Text style={styles.title}>{userData.name}</Text>
+            <View style={styles.imageContainer}>
+              {userImage && typeof userImage === 'string' && userImage.startsWith('http') ? (
+                <Image
+                  source={{ uri: userImage }}
+                  style={styles.profileImage}
+                  onError={() => {
+                    console.log("Image load failed, setting fallback.");
+                    setUserImage(null);
+                  }}
+                />
+              ) : (
+                <View style={styles.defaultProfileCircle} />
+              )}
             </View>
           </View>
-        ) : (
-          <Text style={styles.text}>No user data found.</Text>
-        )}
-      </View>
-    </View>
-  );
+
+          {/* Navigation Sections */}
+          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("AccountDetail", { userData })}>
+            <Text style={styles.sectionText}>Account Detail</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("CustomerSupport")}>
+            <Text style={styles.sectionText}>Customer Support</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("faq")}>
+            <Text style={styles.sectionText}>FAQs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("about")}>
+            <Text style={styles.sectionText}>About</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.section, styles.logout]} onPress={() => navigation.navigate("Logout")}>
+            <Text style={styles.sectionText}>Logout</Text>
+          </TouchableOpacity>
+
+          <View style={styles.iconscontainer}>
+            <SocialIconsRow />
+          </View>
+        </View>
+      ) : (
+        <Text style={styles.text}>No user data found.</Text>
+      )}
+    </ScrollView>
+  </View>
+);
+
 };
 
 const styles = StyleSheet.create({

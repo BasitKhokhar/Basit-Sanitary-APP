@@ -87,7 +87,6 @@ const HomeScreen = ({ navigation }) => {
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     if (offsetY <= 0) {
-      // User has scrolled to the top, trigger refresh
       handleRefresh();
     }
   };

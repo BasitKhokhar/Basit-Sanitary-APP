@@ -9,6 +9,8 @@ const CartScreen = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
   const navigation = useNavigation();
 
   const fetchCartItems = async () => {
@@ -34,6 +36,16 @@ const CartScreen = () => {
       fetchCartItems();
     }, [])
   );
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchCartItems();
+    setRefreshing(false);
+  };
+
+
+
+
 
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -78,8 +90,8 @@ const CartScreen = () => {
     }
   };
 
-  if (isLoading) 
-  return (<View style={styles.loaderContainer}>
+  if (isLoading)
+    return (<View style={styles.loaderContainer}>
       <Loader />
     </View>)
 
@@ -93,6 +105,8 @@ const CartScreen = () => {
         ) : (
           <View style={styles.listContainer}>
             <FlatList
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
               data={cartItems}
               showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item.cart_id.toString()}
@@ -138,11 +152,11 @@ const CartScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  maincontainer:{backgroundColor:'#1A1A1A',paddingTop:30,width:'100%',height:'100%'},
+  maincontainer: { backgroundColor: '#1A1A1A', paddingTop: 30, width: '100%', height: '100%' },
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f9f9f9',borderTopLeftRadius:30,borderTopRightRadius:30,marginHorizontal:10
+    backgroundColor: '#f9f9f9', borderTopLeftRadius: 30, borderTopRightRadius: 30, marginHorizontal: 10
   },
   loaderContainer: {
     flex: 1,

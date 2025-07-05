@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, FlatList, ActivityIndicator, StyleSheet,RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, Image, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import Loader from '../Loader/Loader';
 
 import Constants from 'expo-constants';
@@ -34,6 +34,7 @@ const Services = () => {
     const handleRefresh = () => {
         setRefreshing(true);
         fetchData();
+        setRefreshing(false);
     };
 
 
