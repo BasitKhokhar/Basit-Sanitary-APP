@@ -196,7 +196,7 @@ app.get("/user_images/:storedUserId", (req, res) => {
     }
   });
 });
-// faqs API
+// faqs APIs
 app.get("/faqs", (req, res) => {
   db.query("SELECT * FROM faq", (err, results) => {
     if (err) {
