@@ -28,7 +28,7 @@ const FAQ = () => {
             setLoading(false);
         }
     };
-
+          console.log("FAqs",faqs)
     const toggleExpand = (index) => {
         setExpandedIndex(expandedIndex === index ? null : index);
     };

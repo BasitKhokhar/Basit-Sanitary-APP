@@ -17,13 +17,13 @@ const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const ProductsScreen = () => {
   const [products, setProducts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [sortOrder, setSortOrder] = useState("az");
 
-  // Dropdown state
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState([
     { label: "Sort: A to Z", value: "az" },
@@ -70,8 +70,15 @@ const ProductsScreen = () => {
         console.error("Error fetching products:", error);
         setLoading(false);
       });
-  };
 
+    
+
+  };
+const handleRefresh = () => {
+      setRefreshing(true);
+      fetchProducts();
+      setRefreshing(false);
+    };
   const openProductModal = (product) => setSelectedProduct(product);
 
   if (loading) {
@@ -95,7 +102,6 @@ const ProductsScreen = () => {
   return (
     <View style={styles.maincontainer}>
       <View style={styles.container}>
-        {/* Custom Dropdown */}
         <DropDownPicker
           open={open}
           value={sortOrder}
@@ -116,13 +122,15 @@ const ProductsScreen = () => {
           numColumns={2}
           renderItem={renderItem}
 
-          initialNumToRender={10}            // Load first 10 items initially
-          maxToRenderPerBatch={10}           // Render 10 items per batch
-          updateCellsBatchingPeriod={100}    // Wait 100ms between batches
-          windowSize={7}                     // Number of screens to render ahead/behind
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          windowSize={7}
           removeClippedSubviews={true}
 
           contentContainerStyle={styles.listContainer}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
         />
 
         {selectedProduct && (

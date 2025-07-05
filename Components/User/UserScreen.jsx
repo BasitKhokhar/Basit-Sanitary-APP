@@ -12,22 +12,22 @@ const UserScreen = () => {
   const [userData, setUserData] = useState(null);
   const [userImage, setUserImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  const fetchUserData = async () => {
       try {
         const storedUserId = await AsyncStorage.getItem("userId");
         console.log("User ID in UserScreen is:", storedUserId);
 
         if (storedUserId) {
-          // Fetch user data
+        
           const response = await fetch(`${API_BASE_URL}/users/${storedUserId}`);
           if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
           const data = await response.json();
           setUserData(data);
 
-          // Fetch user image
           const imageResponse = await fetch(`${API_BASE_URL}/user_images/${storedUserId}`);
           if (imageResponse.ok) {
             const imageData = await imageResponse.json();
@@ -44,6 +44,7 @@ const UserScreen = () => {
       }
     };
 
+  useEffect(() => {
     fetchUserData();
   }, []);
 

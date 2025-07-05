@@ -16,7 +16,7 @@ const AddressScreen = () => {
       return;
     }
 
-    const storedUserId = await AsyncStorage.getItem('userId');  // Fetch user ID
+    const storedUserId = await AsyncStorage.getItem('userId'); 
     if (!storedUserId) {
       Alert.alert('Error', 'User not logged in');
       return;

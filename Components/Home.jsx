@@ -21,6 +21,8 @@ const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const HomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [homeData, setHomeData] = useState({
     sliderData: [],
     categoryData: [],
@@ -28,7 +30,6 @@ const HomeScreen = ({ navigation }) => {
     onSaleProducts: [],
     trendingProducts: [],
     completeSets: [],
-    
     firstColumnData: [],
     secondColumnData: [],
   });
@@ -39,17 +40,15 @@ const HomeScreen = ({ navigation }) => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
       try {
         const endpoints = [
           { key: "sliderData", url: `${API_BASE_URL}/sliderimages` },
           { key: "categoryData", url: `${API_BASE_URL}/categories` },
           { key: "onSaleProducts", url: `${API_BASE_URL}/onsale_products` },
-           { key: "brandData", url: `${API_BASE_URL}/brands` },
+          { key: "brandData", url: `${API_BASE_URL}/brands` },
           { key: "trendingProducts", url: `${API_BASE_URL}/trending_products` },
           { key: "completeSets", url: `${API_BASE_URL}/complete_acessory_sets` },
-         
           { key: "firstColumnData", url: `${API_BASE_URL}/first_column_data` },
           { key: "secondColumnData", url: `${API_BASE_URL}/second_column_data` },
         ];
@@ -76,9 +75,23 @@ const HomeScreen = ({ navigation }) => {
       }
     };
 
+  useEffect(() => {
     fetchData();
   }, []);
-console.log("homedata",homeData)
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+    setRefreshing(false);
+  };
+  const handleScroll = (event) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    if (offsetY <= 0) {
+      // User has scrolled to the top, trigger refresh
+      handleRefresh();
+    }
+  };
+  console.log("homedata", homeData)
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -119,17 +132,22 @@ console.log("homedata",homeData)
   ];
 
   return (
-   <FlatList
-  data={sections}
-  keyExtractor={(item) => item.key}
-  renderItem={({ item }) => <View>{item.render()}</View>}
-  contentContainerStyle={styles.listContainer}
-  showsVerticalScrollIndicator={false}
-  initialNumToRender={2} // only first 2 sections are rendered initially
-  windowSize={5} // loads items within 5 screens (ahead & behind)
-  maxToRenderPerBatch={3} // max render per batch
-  updateCellsBatchingPeriod={100} // wait time between batches
-/>
+    <FlatList
+      data={sections}
+      keyExtractor={(item) => item.key}
+      renderItem={({ item }) => <View>{item.render()}</View>}
+      contentContainerStyle={styles.listContainer}
+      showsVerticalScrollIndicator={false}
+      initialNumToRender={2} 
+      windowSize={5} 
+      maxToRenderPerBatch={3} 
+      updateCellsBatchingPeriod={100} 
+
+      onScroll={handleScroll}
+      scrollEventThrottle={16} 
+      refreshing={refreshing}
+      onRefresh={handleRefresh}
+    />
   );
 };
 

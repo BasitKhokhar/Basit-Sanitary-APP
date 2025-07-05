@@ -9,14 +9,14 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
-      setDisplayedText(fullText.slice(0, index + 1)); // Add one letter at a time
+      setDisplayedText(fullText.slice(0, index + 1)); 
       index++;
-      if (index === fullText.length) clearInterval(interval); // Stop animation when done
-    }, 100); // Speed of typing effect
+      if (index === fullText.length) clearInterval(interval);
+    }, 100);
 
     setTimeout(() => {
-      navigation.replace("Main"); // Navigate to Main screen after delay
-    }, 5000); // 4 seconds delay
+      navigation.replace("Main"); 
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, [navigation]);
@@ -26,7 +26,6 @@ const SplashScreen = ({ navigation }) => {
       <Animatable.Text animation="fadeIn" duration={2000} style={styles.welcomeText}>
         {displayedText}
       </Animatable.Text>
-      {/* <ActivityIndicator size="large" color="#10B981" style={styles.loader} /> */}
     </View>
   );
 };

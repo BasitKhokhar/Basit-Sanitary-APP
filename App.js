@@ -189,7 +189,6 @@ const App = () => {
     splashFlow();
   }, []);
 
-  // Show splash screens if still visible
   if (isSplash1Visible) {
     return <SplashScreen1 />;
   }
@@ -198,7 +197,6 @@ const App = () => {
     return <SplashScreen2 onNext={() => setIsSplash2Visible(false)} />;
   }
 
-  // Wait for login check to complete
   if (checkingLogin) {
     return <SplashScreen />;
   }

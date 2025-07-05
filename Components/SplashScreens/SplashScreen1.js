@@ -14,7 +14,7 @@ const SplashScreen1 = () => {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-          setImageUrl(data[0].image_url); // Assuming `image_url` is the correct column name
+          setImageUrl(data[0].image_url);
         } else {
           console.error("Invalid response format:", data);
         }

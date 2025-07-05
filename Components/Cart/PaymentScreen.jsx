@@ -18,26 +18,24 @@ const PaymentScreen = () => {
     console.log("Advance Payment (20%):", advance_payment);
     console.log("Cart Items:", cart_items);
   }, []);
-  // Function to check if an app is installed before opening
+  
   const openApp = async (appUrl, fallbackUrl) => {
     try {
       const supported = await Linking.canOpenURL(appUrl);
       if (supported) {
         await Linking.openURL(appUrl);
       } else {
-        Alert.alert("App Not Found", `Please install the app or use the following link:\n${fallbackUrl}`);
+        Alert.alert("App Not Found", `Please install the app or pay through Jazz Cash/Easy Paisa app install in your phone and upload reciept in confirm order form.`);
       }
     } catch (error) {
       Alert.alert("Error", "Unable to open the app.");
     }
   };
 
-  // Open JazzCash
   const openJazzCash = () => {
     openApp('jazzcash://', 'https://www.jazzcash.com.pk/');
   };
 
-  // Open EasyPaisa
   const openEasyPaisa = () => {
     openApp('easypaisa://', 'https://easypaisa.com.pk/');
   };

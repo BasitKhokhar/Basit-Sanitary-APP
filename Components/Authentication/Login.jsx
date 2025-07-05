@@ -44,13 +44,13 @@ const LoginScreen = ({ navigation }) => {
       .then(async (data) => {
         console.log("userid, toke coming from API",data.userId, data.email,data.token)
         if (data.userId && data.email && data.token) {
-          // Store only the token in SecureStore
+         
           await SecureStore.setItemAsync("jwt_token", data.token);
-          // Optionally store user data in AsyncStorage if needed
+        
           await AsyncStorage.setItem("userId", data.userId.toString());
           await AsyncStorage.setItem("email", data.email);
 
-          // Navigate to the splash screen or home
+        
           navigation.replace("SplashScreen");
         } else {
           Alert.alert("Error", "Invalid credentials");
