@@ -461,7 +461,7 @@ app.post('/orders', async (req, res) => {
 });
 
 app.get("/loginbg",(req,res)=>{
-  const query= "SELECT * FROM loginbg WHERE id=1";
+  const query= "SELECT * FROM logo_image WHERE id=4";
   db.query(query,(err,result)=>{
    if(err) throw err;
    res.json(result)
