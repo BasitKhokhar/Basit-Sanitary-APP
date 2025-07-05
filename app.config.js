@@ -30,7 +30,7 @@ export default () => ({
       stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
       API_BASE_URL: process.env.API_BASE_URL,
       eas: {
-        projectId: "00419d90-2f51-4972-b963-c5d1daad4b19" // ✅ required for linking to EAS
+        projectId: "00419d90-2f51-4972-b963-c5d1daad4b19" 
       },
 
     }
