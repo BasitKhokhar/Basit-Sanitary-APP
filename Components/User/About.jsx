@@ -97,7 +97,7 @@ export default function About() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, backgroundColor: '#FFF' },
+  container: { paddingHorizontal: 20,paddingTop:20,paddingBottom:55, backgroundColor: '#FFF' },
    loaderContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -110,16 +110,16 @@ const styles = StyleSheet.create({
   title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20, color: '#000', alignSelf:'center'},
   section: { flexDirection: 'column', gap: 10, marginBottom: 20 },
   imageContainer: { alignItems: 'center' },
-  image: { width: '100%', height: 250, borderRadius: 10 },
+  image: { width: '100%', height: 350, borderRadius: 10 },
   textContainer: { paddingHorizontal: 10 },
   text: { fontSize: 16, color: '#333',textAlign:'justify' },
   sectionTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 10, color: '#000' , alignSelf:'center'},
   missionContainer: { backgroundColor: '#282828', padding: 15, borderRadius: 8 },
   missionText: { color: 'white', fontSize: 16 ,textAlign:'justify'},
-  ownerContainer: { marginBottom: 20 },
+  ownerContainer: { marginBottom: 100 },
   position: { backgroundColor: '#AA6231', color: 'white',textAlign:'center',paddingVertical:10, borderRadius: 5, fontSize: 18, fontWeight: 'bold' },
   ownerDetails: { flexDirection: 'column', gap: 10, alignItems: 'center', marginTop: 10 },
-  ownerImage: { width: 100, height: 100, borderRadius: 10, borderWidth: 1, borderColor: '#ccc' },
+  ownerImage: { width: 150, height: 150, borderRadius: 10, borderWidth: 1, borderColor: '#ccc' },
   ownerName: { fontSize: 18, fontWeight: 'bold' },
   contact: { fontSize: 16, marginTop: 5 },
   bold: { fontWeight: 'bold' },

@@ -110,7 +110,8 @@ console.log("useremail in checkout",userEmail)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 15,
+    paddingTop: 15,
+    paddingBottom:55,
     backgroundColor: '#f9f9f9'
   },
   header: { fontSize: 22, fontWeight: 'bold', textAlign: 'center', marginVertical: 10 },
