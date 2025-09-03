@@ -45,7 +45,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/complete_acessory_sets', (req, res) => {
-  const query = 'SELECT * FROM products WHERE subcategory_id = 10';
+  const query = 'SELECT * FROM products WHERE subcategory_id = 16';
   db.query(query, (err, results) => {
     if (err) {
       console.error('Query error:', err);
@@ -92,7 +92,8 @@ app.post('/create-payment-intent', async (req, res) => {
       customer: customer.id, // Attach customer ID
       automatic_payment_methods: { enabled: true },
     });
-
+    console.log("complete payment intent",paymentIntent)
+    console.log("cleint secret",paymentIntent.client_secret)
     res.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -100,7 +101,7 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 // payment cards images APi
 app.get("/images", (req, res) => {
-  db.query("SELECT * FROM creditcardsimages", (err, results) => {
+  db.query("SELECT * FROM cardsimages", (err, results) => {
       if (err) {
           return res.status(500).json({ error: err.message });
       }

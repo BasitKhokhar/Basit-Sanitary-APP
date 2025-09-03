@@ -90,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
       handleRefresh();
     }
   };
-  console.log("homedata", homeData)
+  console.log("homedata", homeData.completeSets)
   if (loading) {
     return (
       <View style={styles.loaderContainer}>

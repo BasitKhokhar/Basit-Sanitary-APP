@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image,ScrollView,RefreshControl } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, RefreshControl } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from "@react-navigation/native";
 import SocialIconsRow from "./SocialIconsRow";
 import Loader from "../Loader/Loader";
@@ -56,66 +57,85 @@ const UserScreen = () => {
   console.log("userImage in UserScreen:", userImage);
 
   return (
-  <View style={styles.maincontainer}>
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-      }
-      showsVerticalScrollIndicator={false}
-    >
-      {loading ? (
-        <View style={styles.loaderContainer}>
-          <Loader />
-        </View>
-      ) : userData ? (
-        <View style={styles.profileContainer}>
-          {/* Profile Header */}
-          <View style={styles.header}>
-            <Text style={styles.title}>{userData.name}</Text>
-            <View style={styles.imageContainer}>
-              {userImage && typeof userImage === 'string' && userImage.startsWith('http') ? (
-                <Image
-                  source={{ uri: userImage }}
-                  style={styles.profileImage}
-                  onError={() => {
-                    console.log("Image load failed, setting fallback.");
-                    setUserImage(null);
-                  }}
-                />
-              ) : (
-                <View style={styles.defaultProfileCircle} />
-              )}
+    <View style={styles.maincontainer}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        {loading ? (
+          <View style={styles.loaderContainer}>
+            <Loader />
+          </View>
+        ) : userData ? (
+          <View style={styles.profileContainer}>
+            {/* Profile Header */}
+            <View style={styles.header}>
+              <Text style={styles.title}>{userData.name}</Text>
+              <View style={styles.imageContainer}>
+                {userImage && typeof userImage === 'string' && userImage.startsWith('http') ? (
+                  <Image
+                    source={{ uri: userImage }}
+                    style={styles.profileImage}
+                    onError={() => {
+                      console.log("Image load failed, setting fallback.");
+                      setUserImage(null);
+                    }}
+                  />
+                ) : (
+                  <View style={styles.defaultProfileCircle} />
+                )}
+              </View>
+            </View>
+
+            {/* Navigation Sections */}
+            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("AccountDetail", { userData })}>
+              <View style={styles.sectionRow}>
+                <Icon name="person" size={24} color="#333" style={styles.icon} />
+                <Text style={styles.sectionText}>Account Detail</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("CustomerSupport")}>
+              <View style={styles.sectionRow}>
+                <Icon name="support-agent" size={24} color="#333" style={styles.icon} />
+                <Text style={styles.sectionText}>Customer Support</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("faq")}>
+              <View style={styles.sectionRow}>
+                <Icon name="help-outline" size={24} color="#333" style={styles.icon} />
+                <Text style={styles.sectionText}>FAQs</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("about")}>
+              <View style={styles.sectionRow}>
+                <Icon name="info" size={24} color="#333" style={styles.icon} />
+                <Text style={styles.sectionText}>About</Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.section, styles.logout]} onPress={() => navigation.navigate("Logout")}>
+              <View style={styles.sectionRow}>
+                <Icon name="logout" size={24} color="#333" style={styles.icon} />
+                <Text style={styles.sectionText}>Logout</Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.iconscontainer}>
+              <SocialIconsRow />
             </View>
           </View>
-
-          {/* Navigation Sections */}
-          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("AccountDetail", { userData })}>
-            <Text style={styles.sectionText}>Account Detail</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("CustomerSupport")}>
-            <Text style={styles.sectionText}>Customer Support</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("faq")}>
-            <Text style={styles.sectionText}>FAQs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.section} onPress={() => navigation.navigate("about")}>
-            <Text style={styles.sectionText}>About</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.section, styles.logout]} onPress={() => navigation.navigate("Logout")}>
-            <Text style={styles.sectionText}>Logout</Text>
-          </TouchableOpacity>
-
-          <View style={styles.iconscontainer}>
-            <SocialIconsRow />
-          </View>
-        </View>
-      ) : (
-        <Text style={styles.text}>No user data found.</Text>
-      )}
-    </ScrollView>
-  </View>
-);
+        ) : (
+          <Text style={styles.text}>No user data found.</Text>
+        )}
+      </ScrollView>
+    </View>
+  );
 
 };
 
@@ -167,6 +187,14 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ddd",
     alignItems: "flex-start"
   },
+  sectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginRight: 10,
+  },
+
   sectionText: {
     fontSize: 18,
     color: "#333"

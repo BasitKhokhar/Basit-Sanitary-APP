@@ -91,6 +91,7 @@ const StripePayment = ({ route }) => {
       });
 
       const { clientSecret } = await response.json();
+      console.log("clientsecret coming from stripe APi",clientSecret)
       setClientSecret(clientSecret);
       alert("Your payment is Successfully Done");
     } catch (error) {
