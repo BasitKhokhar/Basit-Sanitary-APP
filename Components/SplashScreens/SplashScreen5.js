@@ -1,82 +1,5 @@
-// import React from "react";
-// import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-
-// const SplashScreen5 = ({onNext, onGooglePress, onEmailPress }) => {
-//   return (
-//     <View style={styles.container}>
-//       {/* Logo at top */}
-//       <Image
-//         source={require("../assets/icon2.png")} // Replace with your logo path
-//         style={styles.logo}
-//       />
-
-//       {/* Heading */}
-//       <Text style={styles.heading}>Let’s Get Started</Text>
-
-//       {/* Continue with Google Button */}
-//       <TouchableOpacity style={styles.googleButton} onPress={onGooglePress}>
-//         <Text style={styles.googleButtonText}>Continue with Google</Text>
-//       </TouchableOpacity>
-
-//       {/* Continue with Email Button */}
-//       <TouchableOpacity style={styles.emailButton} onPress={onEmailPress}>
-//         <Text style={styles.emailButtonText}>Continue with Email</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     paddingHorizontal: 30,
-//   },
-//   logo: {
-//     width: 120,
-//     height: 120,
-//     resizeMode: "contain",
-//     marginBottom: 30,
-//   },
-//   heading: {
-//     fontSize: 26,
-//     fontWeight: "bold",
-//     color: "#8b3dff",
-//     marginBottom: 40,
-//   },
-//   googleButton: {
-//     backgroundColor: "#db4437",
-//     width: "100%",
-//     paddingVertical: 12,
-//     borderRadius: 30,
-//     alignItems: "center",
-//     marginBottom: 20,
-//   },
-//   googleButtonText: {
-//     color: "white",
-//     fontSize: 16,
-//     fontWeight: "bold",
-//   },
-//   emailButton: {
-//     backgroundColor: "#8b3dff",
-//     width: "100%",
-//     paddingVertical: 12,
-//     borderRadius: 30,
-//     alignItems: "center",
-//   },
-//   emailButtonText: {
-//     color: "white",
-//     fontSize: 16,
-//     fontWeight: "bold",
-//   },
-// });
-
-// export default SplashScreen5;
-
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { colors } from "../Themes/colors";
 import Constants from "expo-constants";
@@ -86,37 +9,48 @@ const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 const SplashScreen5 = ({ onNext }) => {
   return (
     <View style={styles.container}>
-      {/* Top Image with Gradient Overlay */}
+      
+      {/* Top Image with gradient overlay */}
       <View style={styles.topContainer}>
-        <Image
+        <ImageBackground
           source={require("../../assets/splash4.jpg")}
           style={styles.image}
-        />
-        <LinearGradient
-          colors={["transparent", "rgba(99, 99, 99, 0.8)", colors.bodybackground]}
-          style={styles.overlay}
         >
-          <Text style={styles.title}>✨ Join Us for a Better Sanitary Experience!</Text>
-        </LinearGradient>
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.70)", colors.headerbg]}
+            style={styles.overlay}
+          >
+            <Text style={styles.title}>
+              ✨ Join Us for a Better Sanitary Experience!
+            </Text>
+          </LinearGradient>
+        </ImageBackground>
       </View>
 
-      {/* Content Section */}
+      {/* Content */}
       <View style={styles.contentContainer}>
         <Text style={styles.description}>
-          Create an account to explore our wide range of high-quality sanitary products. Sign up now for an enhanced shopping experience!
+          Create an account to explore our wide range of high-quality sanitary products. 
+          Sign up now for an enhanced shopping experience!
         </Text>
 
-        <TouchableOpacity onPress={onNext} activeOpacity={0.9} style={styles.buttonWrapper}>
+        {/* Neon Gradient Button */}
+        <TouchableOpacity
+          onPress={onNext}
+          activeOpacity={0.9}
+          style={styles.buttonWrapper}
+        >
           <LinearGradient
-            colors={colors.gradients.mintGlow} 
+            colors={colors.gradients.mintGlow}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>Lets Get Started</Text>
+            <Text style={styles.buttonText}>Let’s Get Started</Text>
           </LinearGradient>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -124,50 +58,57 @@ const SplashScreen5 = ({ onNext }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.bodybackground,
+    backgroundColor: colors.headerbg,
     alignItems: "center",
   },
+
   topContainer: {
     width: "100%",
-    height: "70%",
-    position: "relative",
+    height: "73%",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    overflow: "hidden",
   },
+
   image: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+    justifyContent: "flex-end",
   },
+
   overlay: {
-    position: "absolute",
-    bottom: 0,
     width: "100%",
-    paddingVertical: 30,
-    alignItems: "center",
+    padding: 20,
+    justifyContent: "flex-end",
   },
+
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    color: colors.text,
+    color: colors.white,
     textAlign: "center",
-    textShadowColor: colors.primary,
-    // textShadowOffset: { width: 0, height: 0 },
-    // textShadowRadius: 10,
     paddingHorizontal: 20,
   },
+
   contentContainer: {
     width: "100%",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    backgroundColor: colors.headerbg,
+    paddingBottom: 20,
+    paddingTop: 5,
   },
+
   description: {
     fontSize: 16,
-    color: colors.mutedText,
+    color: colors.secondary,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 30,
     lineHeight: 22,
   },
+
   buttonWrapper: {
     width: "100%",
     borderRadius: 40,
@@ -176,11 +117,13 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 8,
   },
+
   button: {
     paddingVertical: 16,
     borderRadius: 40,
     alignItems: "center",
   },
+
   buttonText: {
     color: colors.text,
     fontSize: 18,

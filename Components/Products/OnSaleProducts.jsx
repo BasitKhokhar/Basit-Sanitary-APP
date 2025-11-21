@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from "react";
 // import {
 //   View,
@@ -13,8 +14,6 @@
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { LinearGradient } from "expo-linear-gradient";
 // import ProductModal from "./ProductModal";
-// import Constants from 'expo-constants';
-// const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 // const { width } = Dimensions.get("window");
 // const ITEM_WIDTH = width * 0.8;
@@ -35,40 +34,17 @@
 //   ["#A52A2A", "#B22222", "#DC143C"],
 // ];
 
-// const OnSaleProducts = () => {
-//   const [products, setProducts] = useState([]);
-//   const [loading, setLoading] = useState(true);
+// const OnSaleProducts = ({ products }) => {
 //   const [userId, setUserId] = useState(null);
 //   const [selectedProduct, setSelectedProduct] = useState(null);
-//   const scrollX = React.useRef(new Animated.Value(0)).current;
 //   const [imageErrors, setImageErrors] = useState({});
-
-//   useEffect(() => {
-//     const fetchProducts = async () => {
-//       try {
-//         const res = await fetch(`${API_BASE_URL}/onsale_products`);
-//         const data = await res.json();
-//         if (Array.isArray(data)) {
-//           setProducts(data);
-//         } else {
-//           console.warn("Unexpected API response format");
-//         }
-//       } catch (error) {
-//         console.error("Error fetching products:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchProducts();
-//   }, []);
+//   const scrollX = React.useRef(new Animated.Value(0)).current;
 
 //   useEffect(() => {
 //     const fetchUserId = async () => {
 //       try {
 //         const storedUserId = await AsyncStorage.getItem("userId");
-//         if (storedUserId) {
-//           setUserId(storedUserId);
-//         }
+//         if (storedUserId) setUserId(storedUserId);
 //       } catch (error) {
 //         console.error("Error fetching userId:", error);
 //       }
@@ -76,22 +52,15 @@
 //     fetchUserId();
 //   }, []);
 
-//   const openProductModal = (product) => {
-//     setSelectedProduct(product);
-//   };
+//   const openProductModal = (product) => setSelectedProduct(product);
+//   const closeProductModal = () => setSelectedProduct(null);
 
-//   const closeProductModal = () => {
-//     setSelectedProduct(null);
-//   };
-
-//   if (loading) {
-//     return <ActivityIndicator size="large" color="#007BFF" style={styles.loader} />;
-//   }
-
-//   if (!products.length) {
+//   if (!products || products.length === 0) {
 //     return (
-//       <View style={{ paddingVertical: 40, alignItems: 'center' }}>
-//         <Text style={{ color: 'gray', fontSize: 16 }}>No sale products available.</Text>
+//       <View style={{ paddingVertical: 40, alignItems: "center" }}>
+//         <Text style={{ color: "gray", fontSize: 16 }}>
+//           No sale products available.
+//         </Text>
 //       </View>
 //     );
 //   }
@@ -118,7 +87,6 @@
 //             index * ITEM_WIDTH,
 //             (index + 1) * ITEM_WIDTH,
 //           ];
-
 //           const scale = scrollX.interpolate({
 //             inputRange,
 //             outputRange: [0.85, 1, 0.85],
@@ -141,13 +109,21 @@
 //                     <Image
 //                       source={{ uri: item.image_url }}
 //                       style={styles.productImage}
-//                       onError={() => setImageErrors(prev => ({ ...prev, [item.id]: true }))}
+//                       onError={() =>
+//                         setImageErrors((prev) => ({ ...prev, [item.id]: true }))
+//                       }
 //                     />
 //                   ) : (
-//                     <View style={[styles.productImage, { backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center' }]}>
-//                       <Text style={{ color: 'white', fontSize: 10 }}>Image Error</Text>
+//                     <View
+//                       style={[
+//                         styles.productImage,
+//                         { backgroundColor: "#ccc", justifyContent: "center", alignItems: "center" },
+//                       ]}
+//                     >
+//                       <Text style={{ color: "white", fontSize: 10 }}>Image Error</Text>
 //                     </View>
 //                   )}
+
 //                   <View style={styles.imagedata}>
 //                     <Text style={styles.productName}>{item.name}</Text>
 //                     <Text style={styles.productStock}>Stock: {item.stock}</Text>
@@ -175,7 +151,7 @@
 
 // const styles = StyleSheet.create({
 //   loader: { marginTop: 50 },
-//   container: { paddingVertical: 20 },
+//   container: { paddingBottom: 30 },
 //   heading: {
 //     fontSize: 20,
 //     fontWeight: "bold",
@@ -201,29 +177,33 @@
 //   },
 //   cardheader: {
 //     flexDirection: "row",
-//     justifyContent: 'space-between',
+//     justifyContent: "space-between",
 //     alignItems: "center",
-//     paddingHorizontal: 10
+//     paddingHorizontal: 10,
 //   },
 //   productImage: {
 //     width: 140,
 //     height: 140,
 //     borderRadius: 5,
 //     borderWidth: 2,
-//     borderColor: 'white'
+//     borderColor: "white",
 //   },
 //   imagedata: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     width: '40%',
+//     flexDirection: "column",
+//     width: "40%",
 //   },
-//   productName: { fontSize: 14, fontWeight: "bold", color: "#fff", marginTop: 5 },
+//   productName: {
+//     fontSize: 14,
+//     fontWeight: "bold",
+//     color: "#fff",
+//     marginTop: 5,
+//   },
 //   productStock: { fontSize: 12, color: "#fff" },
 //   productPrice: {
 //     fontSize: 16,
 //     fontWeight: "bold",
 //     color: "red",
-//     textDecorationLine: "line-through"
+//     textDecorationLine: "line-through",
 //   },
 //   newProductPrice: { fontSize: 16, fontWeight: "bold", color: "#fff" },
 //   shopNowButton: {
@@ -232,9 +212,14 @@
 //     paddingVertical: 6,
 //     paddingHorizontal: 12,
 //     borderRadius: 5,
-//     borderWidth: 2
+//     borderWidth: 2,
 //   },
-//   shopNowText: { color: "black", fontSize: 14, fontWeight: "bold", textAlign: 'center' },
+//   shopNowText: {
+//     color: "black",
+//     fontSize: 14,
+//     fontWeight: "bold",
+//     textAlign: "center",
+//   },
 // });
 
 // export default OnSaleProducts;
@@ -243,16 +228,15 @@ import {
   View,
   Text,
   Image,
-  FlatList,
-  ActivityIndicator,
+  Animated,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Animated,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import ProductModal from "./ProductModal";
+import { colors } from "../Themes/colors";
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = width * 0.8;
@@ -260,6 +244,7 @@ const ITEM_HEIGHT = 200;
 const SPACING = 0;
 const CENTER_OFFSET = (width - ITEM_WIDTH) / 2;
 
+// Keep gradient colors array for card backgrounds
 const GRADIENT_COLORS = [
   ["#1A1A1A", "#4B4B4B", "#696969"],
   ["#8A2BE2", "#9370DB", "#BA55D3"],
@@ -297,7 +282,7 @@ const OnSaleProducts = ({ products }) => {
   if (!products || products.length === 0) {
     return (
       <View style={{ paddingVertical: 40, alignItems: "center" }}>
-        <Text style={{ color: "gray", fontSize: 16 }}>
+        <Text style={{ color: colors.mutedText, fontSize: 16 }}>
           No sale products available.
         </Text>
       </View>
@@ -305,8 +290,8 @@ const OnSaleProducts = ({ products }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>On Sale Products</Text>
+    <View style={[styles.container, { backgroundColor: colors.bodybackground }]}>
+      <Text style={[styles.heading, { color: colors.text }]}>On Sale Products</Text>
       <Animated.FlatList
         data={products}
         keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
@@ -347,7 +332,7 @@ const OnSaleProducts = ({ products }) => {
                   {!imageFailed ? (
                     <Image
                       source={{ uri: item.image_url }}
-                      style={styles.productImage}
+                      style={[styles.productImage, { borderColor: colors.border }]}
                       onError={() =>
                         setImageErrors((prev) => ({ ...prev, [item.id]: true }))
                       }
@@ -356,23 +341,38 @@ const OnSaleProducts = ({ products }) => {
                     <View
                       style={[
                         styles.productImage,
-                        { backgroundColor: "#ccc", justifyContent: "center", alignItems: "center" },
+                        {
+                          backgroundColor: colors.secondary,
+                          justifyContent: "center",
+                          alignItems: "center",
+                        },
                       ]}
                     >
-                      <Text style={{ color: "white", fontSize: 10 }}>Image Error</Text>
+                      <Text style={{ color: colors.text, fontSize: 10 }}>Image Error</Text>
                     </View>
                   )}
 
                   <View style={styles.imagedata}>
-                    <Text style={styles.productName}>{item.name}</Text>
-                    <Text style={styles.productStock}>Stock: {item.stock}</Text>
-                    <Text style={styles.productPrice}>Before: {item.price}</Text>
-                    <Text style={styles.newProductPrice}>Now: {item.New_price}</Text>
+                    <Text style={[styles.productName, { color: colors.white }]}>{item.name}</Text>
+                    <Text style={[styles.productStock, { color: colors.white }]}>
+                      Stock: {item.stock}
+                    </Text>
+                    <Text style={[styles.productPrice, { color: colors.error }]}>
+                      Before: {item.price ? Math.floor(item.price) : "N/A"}
+                    </Text>
+                    <Text style={[styles.newProductPrice, { color: colors.white }]}>
+                      Now: {item.New_price ? Math.floor(item.New_price) : "N/A"}
+                    </Text>
                     <TouchableOpacity
-                      style={styles.shopNowButton}
+                      style={[
+                        styles.shopNowButton,
+                        { backgroundColor: colors.white, borderColor: colors.text },
+                      ]}
                       onPress={() => openProductModal(item)}
                     >
-                      <Text style={styles.shopNowText}>Shop Now</Text>
+                      <Text style={[styles.shopNowText, { color: colors.text }]}>
+                        Shop Now
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -389,76 +389,19 @@ const OnSaleProducts = ({ products }) => {
 };
 
 const styles = StyleSheet.create({
-  loader: { marginTop: 50 },
   container: { paddingBottom: 30 },
-  heading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "black",
-  },
-  productCard: {
-    width: ITEM_WIDTH,
-    height: ITEM_HEIGHT,
-    marginHorizontal: SPACING / 2,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 3,
-  },
-  gradientBackground: {
-    flex: 1,
-    width: "100%",
-    borderRadius: 10,
-    padding: 10,
-    justifyContent: "center",
-  },
-  cardheader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 10,
-  },
-  productImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: "white",
-  },
-  imagedata: {
-    flexDirection: "column",
-    width: "40%",
-  },
-  productName: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#fff",
-    marginTop: 5,
-  },
-  productStock: { fontSize: 12, color: "#fff" },
-  productPrice: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "red",
-    textDecorationLine: "line-through",
-  },
-  newProductPrice: { fontSize: 16, fontWeight: "bold", color: "#fff" },
-  shopNowButton: {
-    marginTop: 8,
-    backgroundColor: "#fff",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-    borderWidth: 2,
-  },
-  shopNowText: {
-    color: "black",
-    fontSize: 14,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
+  heading: { fontSize: 20, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  productCard: { width: ITEM_WIDTH, height: ITEM_HEIGHT, marginHorizontal: SPACING / 2, borderRadius: 10, alignItems: "center", justifyContent: "center", elevation: 3 },
+  gradientBackground: { flex: 1, width: "100%", borderRadius: 10, padding: 10, justifyContent: "center" },
+  cardheader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10 },
+  productImage: { width: 140, height: 140, borderRadius: 5, borderWidth: 2 },
+  imagedata: { flexDirection: "column", width: "40%" },
+  productName: { fontSize: 14, fontWeight: "bold", marginTop: 5 },
+  productStock: { fontSize: 12 },
+  productPrice: { fontSize: 16, fontWeight: "bold", textDecorationLine: "line-through" },
+  newProductPrice: { fontSize: 16, fontWeight: "bold" },
+  shopNowButton: { marginTop: 8, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 5, borderWidth: 2 },
+  shopNowText: { fontSize: 14, fontWeight: "bold", textAlign: "center" },
 });
 
 export default OnSaleProducts;
