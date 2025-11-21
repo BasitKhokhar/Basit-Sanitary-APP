@@ -1,24 +1,111 @@
+// import React from "react";
+// import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+// import { useNavigation } from "@react-navigation/native";
+
+// const SplashScreen3 = () => {
+//   const navigation = useNavigation();
+
+//   const handleNext = () => {
+//     navigation.navigate("Login"); // Navigate to the login screen
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Fast & Secure Shopping Experience</Text>
+//       <Text style={styles.description}>
+//         Enjoy a hassle-free and secure shopping experience with our top-rated sanitary products.
+//       </Text>
+      
+//       <TouchableOpacity style={styles.button} onPress={handleNext}>
+//         <Text style={styles.buttonText}>Next</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     padding: 20,
+//     backgroundColor: "black",
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     color: "white",
+//     marginBottom: 10,
+//     textAlign: "center",
+//   },
+//   description: {
+//     fontSize: 16,
+//     color: "white",
+//     textAlign: "center",
+//     marginBottom: 20,
+//   },
+//   button: {
+//     backgroundColor: "#10B981",
+//     padding: 12,
+//     borderRadius: 5,
+//     alignItems: "center",
+//     marginTop: 50,
+//   },
+//   buttonText: {
+//     color: "white",
+//     fontSize: 18,
+//     fontWeight: "bold",
+//   },
+// });
+
+// export default SplashScreen3;
+
+
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { colors } from "../Themes/colors"; 
+import Constants from "expo-constants";
 
-const SplashScreen3 = () => {
-  const navigation = useNavigation();
+const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
-  const handleNext = () => {
-    navigation.navigate("Login"); // Navigate to the login screen
-  };
-
+const SplashScreen3 = ({ onNext }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Fast & Secure Shopping Experience</Text>
-      <Text style={styles.description}>
-        Enjoy a hassle-free and secure shopping experience with our top-rated sanitary products.
-      </Text>
-      
-      <TouchableOpacity style={styles.button} onPress={handleNext}>
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
+      {/* Top Image with gradient overlay */}
+      <View style={styles.topContainer}>
+        <ImageBackground
+          source={require("../../assets/splash222.jpg")}
+          style={styles.image}
+        >
+          {/* Gradient Overlay at bottom */}
+          <LinearGradient
+            colors={["transparent", "rgba(99, 99, 99, 0.8)", colors.bodybackground]}
+            style={styles.overlay}
+          >
+            <Text style={styles.title}>🛁 Explore Premium Sanitary Products</Text>
+          </LinearGradient>
+        </ImageBackground>
+      </View>
+
+      {/* Content */}
+      <View style={styles.contentContainer}>
+        <Text style={styles.description}>
+          Browse taps, showers, bathroom fittings, pipes, kitchen accessories, and much more — all from top trusted brands.
+        </Text>
+
+        {/* Gradient Button */}
+        <TouchableOpacity onPress={onNext} activeOpacity={0.9} style={styles.buttonWrapper}>
+          <LinearGradient
+            colors={colors.gradients.mintGlow} // uses colors file
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Next</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -26,35 +113,68 @@ const SplashScreen3 = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: colors.bodybackground,
     alignItems: "center",
+  },
+  topContainer: {
+    width: "100%",
+    height: "70%",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  overlay: {
+    width: "100%",
     padding: 20,
-    backgroundColor: "black",
+    justifyContent: "flex-end",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    color: "white",
-    marginBottom: 10,
+    color: colors.text,
     textAlign: "center",
+    textShadowColor: colors.primary,
+    // textShadowOffset: { width: 0, height: 0 },
+    // textShadowRadius: 10,
+  },
+  contentContainer: {
+    width: "100%",
+    paddingHorizontal: 24,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 20,
   },
   description: {
     fontSize: 16,
-    color: "white",
+    color: colors.mutedText,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 30,
+    lineHeight: 22,
+  },
+  buttonWrapper: {
+    width: "100%",
+    borderRadius: 40,
+    shadowColor: colors.accent,
+    shadowOpacity: 0.8,
+    shadowRadius: 20,
+    elevation: 8,
   },
   button: {
-    backgroundColor: "#10B981",
-    padding: 12,
-    borderRadius: 5,
+    paddingVertical: 16,
+    borderRadius: 40,
     alignItems: "center",
-    marginTop: 50,
   },
   buttonText: {
-    color: "white",
+    color: colors.text,
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
+    letterSpacing: 1,
   },
 });
 
