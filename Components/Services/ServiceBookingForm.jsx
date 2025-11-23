@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView } from 'react-native';
 import * as Location from 'expo-location';
 import Constants from 'expo-constants';
-import colors from '../../Themes/colors'; // make sure path is correct
+import { colors } from '../Themes/colors';
 
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 

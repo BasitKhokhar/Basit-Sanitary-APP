@@ -36,7 +36,7 @@ const SocialIconsRow = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Social Links</Text>
+      <Text style={styles.title}>Social Links:</Text>
       <FlatList
         data={socialIcons}
         renderItem={renderItem}
@@ -50,7 +50,7 @@ const SocialIconsRow = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 15,
     flexDirection: 'column',
     alignItems: 'flex-start',
     backgroundColor: "#FFFFFF",
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    padding: 10
+    paddingHorizontal:10 ,paddingVertical:20
   },
   title: {
     fontSize: 24,

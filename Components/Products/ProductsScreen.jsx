@@ -147,7 +147,7 @@ const ProductsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  maincontainer: { flex: 1, width: "100%", height: "100%" },
+  maincontainer: { flex: 1, width: "100%", height: "100%",paddingTop:30 },
   container: { flex: 1, borderTopLeftRadius: 30, borderTopRightRadius: 30 },
   loaderContainer: {
     flex: 1,

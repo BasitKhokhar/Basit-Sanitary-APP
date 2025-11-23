@@ -56,31 +56,6 @@ app.get('/complete_acessory_sets', (req, res) => {
   });
 });
 
-
-//   try {
-//     const { amount, currency = "usd", metadata } = req.body;
-
-//     // Validate amount
-//     if (!amount || isNaN(amount) || amount <= 0) {
-//       return res.status(400).send({ error: "Invalid amount provided" });
-//     }
-
-
-//     const paymentIntent = await stripe.paymentIntents.create({
-//       amount: Math.round(amount * 100), // Convert to cents
-//       currency,
-//       metadata: metadata || {}, // Optional metadata for tracking
-//       payment_method_types: ["card"], // Only allow card payments
-//     });
-
-//     console.log("✅ Payment Intent Created:", paymentIntent.id);
-
-//     res.send({ clientSecret: paymentIntent.client_secret });
-//   } catch (error) {
-//     console.error("❌ Error Creating Payment Intent:", error.message);
-//     res.status(500).send({ error: error.message });
-//   }
-// });
 app.post('/create-payment-intent', async (req, res) => {
   const { amount, currency, customerEmail } = req.body;
   try {

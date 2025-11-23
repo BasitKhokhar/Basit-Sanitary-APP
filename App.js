@@ -422,6 +422,9 @@ import SplashScreen2 from "./Components/SplashScreens/SplashScreen2";
 import SplashScreen3 from "./Components/SplashScreens/SplashScreen3";
 import SplashScreen4 from "./Components/SplashScreens/SplashScreen4";
 import SplashScreen5 from "./Components/SplashScreens/SplashScreen5";
+
+
+import ServiceBookingForm from "./Components/Services/ServiceBookingForm";
 import UserDetailsScreen from "./Components/Cart/UserDetailsScreen";
 import UserScreen from "./Components/User/UserScreen";
 import AccountDetailScreen from "./Components/User/AccountDetailScreen";
@@ -644,10 +647,11 @@ const App = () => {
           <Stack.Screen name="Profile" component={UserScreen} options={{ title: "Profile" }} />
           <Stack.Screen name="Categories" component={Categories} />
           <Stack.Screen name="Subcategories" component={Subcategories} options={{ title: "SubCategories", ...commonHeaderOptions, }}/>
-          <Stack.Screen name="Products" component={Products} />
+          <Stack.Screen name="Products" component={Products} options={{ title: "Products", ...commonHeaderOptions, }}/>
           <Stack.Screen name="SearchScreen" component={SearchScreen} options={{ title: "Search Products", ...commonHeaderOptions, }} />
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="UserDetailsScreen" component={UserDetailsScreen} options={{ title: "Confirm Order", ...commonHeaderOptions, }}/>
+           <Stack.Screen name="bookplumber" component={ServiceBookingForm} options={{ title: "Book Plumber", ...commonHeaderOptions, }}/>
           <Stack.Screen name="User" component={UserScreen} />
           <Stack.Screen name="AccountDetail" component={AccountDetailScreen} options={{ title: "Profile Update", ...commonHeaderOptions, }}/>
           <Stack.Screen name="CustomerSupport" component={CustomerSupportScreen} options={{ title: "Customer Support", ...commonHeaderOptions, }}/>
