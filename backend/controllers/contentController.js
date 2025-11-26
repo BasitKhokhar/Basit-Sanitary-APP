@@ -3,7 +3,7 @@ const prisma = require('../prisma/client');
 //about sliderimages
 exports.getSliderImages = async (req, res) => {
   try {
-    const images = await prisma.sliderimages.findMany(); 
+    const images = await prisma.sliderImages.findMany(); 
     res.json(images);
   } catch (error) {
     console.error("Error fetching slider images:", error);
@@ -14,7 +14,7 @@ exports.getSliderImages = async (req, res) => {
 exports.getPdfFileById = async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const file = await prisma.apppdffiles.findUnique({ where: { id } });
+    const file = await prisma.appPdfFiles.findUnique({ where: { id } });
 
     if (!file) {
       return res.status(404).json({ error: "PDF not found" });
@@ -60,7 +60,7 @@ exports.getAllFaqs = async (req, res) => {
 //about paymentbtn
 exports.getPaymentBtnImage = async (req, res) => {
   try {
-    const image = await prisma.sliderimages.findUnique({
+    const image = await prisma.sliderImages.findUnique({
       where: { id: 3 }, 
     });
 
@@ -76,3 +76,45 @@ exports.getPaymentBtnImage = async (req, res) => {
   }
 };
 
+// 📌 Get all brands
+// =========================
+exports.getBrands = async (req, res) => {
+  try {
+    const brands = await prisma.brands.findMany();
+    res.status(200).json(brands);
+  } catch (error) {
+    console.error("❌ Error fetching brands:", error);
+    res.status(500).json({ error: "Failed to fetch brands" });
+  }
+};
+
+// =========================
+// 📌 Get first 2 customer support options
+// =========================
+exports.getFirstColumnData = async (req, res) => {
+  try {
+    const firstColumn = await prisma.customer_supportoptions.findMany({
+      take: 2,
+    });
+    res.status(200).json(firstColumn);
+  } catch (error) {
+    console.error("❌ Error fetching first 2 rows:", error);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+};
+
+// =========================
+// 📌 Get remaining customer support options
+// =========================
+exports.getSecondColumnData = async (req, res) => {
+  try {
+    const secondColumn = await prisma.customer_supportoptions.findMany({
+      skip: 2,
+      take: 100,
+    });
+    res.status(200).json(secondColumn);
+  } catch (error) {
+    console.error("❌ Error fetching next rows:", error);
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+};

@@ -4,6 +4,10 @@ const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const productsRoutes = require('./routes/productsRoutes');
+
+const cartRoutes = require('./routes/cartRoutes');
+const servicesRoutes = require('./routes/servicesRoutes');
 
 const paymentRoutes = require('./routes/paymentRoutes');
 const contentRoutes = require('./routes/contentRoutes');
@@ -17,6 +21,9 @@ app.use(express.json());
 // Route groups
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
+app.use('/products', productsRoutes);
+app.use('/cart', cartRoutes);
+app.use('/services', servicesRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/content', contentRoutes);
 app.use('/notifications', notificationsRoutes);

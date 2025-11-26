@@ -168,7 +168,7 @@ import { storage } from "../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { colors } from "../Themes/colors";   // ✅ THEME IMPORT
-
+import { apiFetch } from "../../src/apiFetch";
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const AccountDetailScreen = ({ route }) => {
@@ -216,7 +216,7 @@ const AccountDetailScreen = ({ route }) => {
 
   const saveImageUrlToDatabase = async (userId, imageUrl) => {
     try {
-      await fetch(`${API_BASE_URL}/upload-profile-image`, {
+      await apiFetch(`/users/upload-profile-image`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userId, image_url: imageUrl }),
@@ -231,7 +231,7 @@ const AccountDetailScreen = ({ route }) => {
     try {
       const userId = await AsyncStorage.getItem("userId");
 
-      await fetch(`${API_BASE_URL}/users/${userId}`, {
+      await apiFetch(`/users/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, city }),

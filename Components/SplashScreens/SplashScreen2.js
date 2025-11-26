@@ -104,10 +104,10 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     width: "100%",
     borderRadius: 40,
-    shadowColor: colors.accent,
-    shadowOpacity: 0.8,
-    shadowRadius: 20,
-    elevation: 8,
+    // shadowColor: colors.accent,
+    // shadowOpacity: 0.8,
+    // shadowRadius: 20,
+    // elevation: 8,
   },
   button: {
     paddingVertical: 16,

@@ -274,7 +274,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Loader from '../Loader/Loader';
 import Constants from 'expo-constants';
 import { colors } from "../Themes/colors";
-
+import { apiFetch } from '../../src/apiFetch';
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const CartScreen = () => {

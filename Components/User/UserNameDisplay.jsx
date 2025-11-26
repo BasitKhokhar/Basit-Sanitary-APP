@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import DateTimeDisplay from "./DateTimeDisplay";
 import Constants from 'expo-constants';
+import { apiFetch } from "../../src/apiFetch";
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const UserNameDisplay = () => {
@@ -15,7 +16,7 @@ const UserNameDisplay = () => {
       const storedUserId = await AsyncStorage.getItem("userId");
       if (storedUserId) {
         try {
-          const response = await fetch(`${API_BASE_URL}/users/${storedUserId}`);
+          const response = await apiFetch(`/users/${storedUserId}`);
           if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
           const data = await response.json();

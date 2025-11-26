@@ -446,25 +446,32 @@ const Tab = createBottomTabNavigator();
 
 // ------------------ Main Layout ------------------
 const MainLayout = ({ navigation, children, currentScreen }) => {
-  const [logo, setLogo] = useState(null);
+  // const [logo, setLogo] = useState(null);
 
-  useEffect(() => {
-    const fetchLogo = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/logo_image`);
-        const data = await response.json();
-        if (data.length > 0) setLogo(data[0].image_url);
-      } catch (error) {
-        console.error("Error fetching logo:", error);
-      }
-    };
-    fetchLogo();
-  }, []);
+  // useEffect(() => {
+  //   const fetchLogo = async () => {
+  //     try {
+  //       const response = await fetch(`${API_BASE_URL}/logo_image`);
+  //       const data = await response.json();
+  //       if (data.length > 0) setLogo(data[0].image_url);
+  //     } catch (error) {
+  //       console.error("Error fetching logo:", error);
+  //     }
+  //   };
+  //   fetchLogo();
+  // }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bodybackground }]}>
       <View style={[styles.header, { backgroundColor: colors.headerbg }]}>
-        {logo && <Image source={{ uri: logo }} style={styles.logo} />}
+           <View style={styles.logoWrapper}>
+            <Image
+              source={require("./assets/logo.png")}
+              style={styles.logo}
+              resizeMode="cover" // fills container
+            />
+          </View>
+         
         <TouchableOpacity
           style={[styles.searchBar, { backgroundColor: colors.white }]}
           onPress={() => navigation.navigate("SearchScreen")}
@@ -581,30 +588,97 @@ export const commonHeaderOptions = {
 
 // ------------------ App ------------------
 const App = () => {
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
+  // const [checkingLogin, setCheckingLogin] = useState(true);
+  // const [isSplash1Visible, setIsSplash1Visible] = useState(true);
+  // const [isSplash2Visible, setIsSplash2Visible] = useState(null);
+  // const [isSplash3Visible, setIsSplash3Visible] = useState(null);
+  // const [isSplash4Visible, setIsSplash4Visible] = useState(null);
+  // const [isSplash5Visible, setIsSplash5Visible] = useState(null);
+
+  // useEffect(() => {
+  //   const checkLogin = async () => {
+  //     try {
+  //       const token = await SecureStore.getItemAsync("refreshToken");
+  //       const storedUserId = await AsyncStorage.getItem("userId");
+  //       console.log("login data in app.js",token,storedUserId)
+  //       if (token && storedUserId) {
+  //         setUserId(storedUserId);
+  //         setIsSplash2Visible(false);
+  //         setIsSplash3Visible(false);
+  //         setIsSplash4Visible(false);
+  //         setIsSplash5Visible(false);
+  //       } else {
+  //         setIsSplash2Visible(true);
+  //         setIsSplash3Visible(false);
+  //         setIsSplash4Visible(false);
+  //         setIsSplash5Visible(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking login:", error);
+  //     } finally {
+  //       setCheckingLogin(false);
+  //     }
+  //   };
+  //   checkLogin();
+  // }, []);
+
+  // useEffect(() => {
+  //   const splashFlow = async () => {
+  //     await new Promise((resolve) => setTimeout(resolve, 5000));
+  //     setIsSplash1Visible(false);
+  //   };
+  //   splashFlow();
+  // }, []);
+
+  // if (isSplash1Visible) return <SplashScreen1 />;
+  // if (isSplash2Visible) return <SplashScreen2 onNext={() => { setIsSplash2Visible(false); setIsSplash3Visible(true); }} />;
+  // if (isSplash3Visible) return <SplashScreen3 onNext={() => { setIsSplash3Visible(false); setIsSplash4Visible(true); }} />;
+  // if (isSplash4Visible) return <SplashScreen4 onNext={() => { setIsSplash4Visible(false); setIsSplash5Visible(true); }} />;
+  // if (isSplash5Visible) return <SplashScreen5 onNext={() => setIsSplash5Visible(false)} />;
+  // if (checkingLogin) return <SplashScreen />;
+const [userId, setUserId] = useState(null);
   const [checkingLogin, setCheckingLogin] = useState(true);
   const [isSplash1Visible, setIsSplash1Visible] = useState(true);
   const [isSplash2Visible, setIsSplash2Visible] = useState(null);
   const [isSplash3Visible, setIsSplash3Visible] = useState(null);
   const [isSplash4Visible, setIsSplash4Visible] = useState(null);
-  const [isSplash5Visible, setIsSplash5Visible] = useState(null);
+
+  //   useEffect(() => {
+  //   const clearAppDataOnce = async () => {
+  //     try {
+  //       await AsyncStorage.clear();
+  //       console.log("✅ AsyncStorage cleared");
+
+  //       await SecureStore.deleteItemAsync("jwt_token");
+  //       await SecureStore.deleteItemAsync("userId"); // add more keys if needed
+  //       console.log("✅ SecureStore cleared");
+
+  //       console.log("📦 Storage wiped — next start will force login");
+  //     } catch (error) {
+  //       console.error("❌ Error clearing app data:", error);
+  //     }
+  //   };
+
+  //   clearAppDataOnce();
+  // }, []);
+
 
   useEffect(() => {
     const checkLogin = async () => {
       try {
-        const token = await SecureStore.getItemAsync("jwt_token");
+        const token = await SecureStore.getItemAsync("refreshToken");
         const storedUserId = await AsyncStorage.getItem("userId");
+        console.log("userid in app.js is", storedUserId, token)
         if (token && storedUserId) {
           setUserId(storedUserId);
           setIsSplash2Visible(false);
           setIsSplash3Visible(false);
           setIsSplash4Visible(false);
-          setIsSplash5Visible(false);
         } else {
           setIsSplash2Visible(true);
           setIsSplash3Visible(false);
           setIsSplash4Visible(false);
-          setIsSplash5Visible(false);
         }
       } catch (error) {
         console.error("Error checking login:", error);
@@ -612,6 +686,7 @@ const App = () => {
         setCheckingLogin(false);
       }
     };
+
     checkLogin();
   }, []);
 
@@ -620,16 +695,33 @@ const App = () => {
       await new Promise((resolve) => setTimeout(resolve, 5000));
       setIsSplash1Visible(false);
     };
+
     splashFlow();
   }, []);
 
-  if (isSplash1Visible) return <SplashScreen1 />;
-  if (isSplash2Visible) return <SplashScreen2 onNext={() => { setIsSplash2Visible(false); setIsSplash3Visible(true); }} />;
-  if (isSplash3Visible) return <SplashScreen3 onNext={() => { setIsSplash3Visible(false); setIsSplash4Visible(true); }} />;
-  if (isSplash4Visible) return <SplashScreen4 onNext={() => { setIsSplash4Visible(false); setIsSplash5Visible(true); }} />;
-  if (isSplash5Visible) return <SplashScreen5 onNext={() => setIsSplash5Visible(false)} />;
-  if (checkingLogin) return <SplashScreen />;
+  if (isSplash1Visible) {
+    return <SplashScreen1 />;
+  }
 
+  if (isSplash2Visible) {
+    return <SplashScreen2 onNext={() => {
+      setIsSplash2Visible(false);
+      setIsSplash3Visible(true);
+    }} />;
+  }
+  if (isSplash3Visible) {
+    return <SplashScreen3 onNext={() => {
+      setIsSplash3Visible(false);
+      setIsSplash4Visible(true);
+    }} />;
+  }
+  if (isSplash4Visible) {
+    return <SplashScreen4 onNext={() => setIsSplash4Visible(false)} />;
+  }
+
+  if (checkingLogin) {
+    return <SplashScreen />;
+  }
   return (
     <StripeProvider publishableKey={stripeKey} merchantDisplayName="Basit Sanitary App">
       <NavigationContainer>

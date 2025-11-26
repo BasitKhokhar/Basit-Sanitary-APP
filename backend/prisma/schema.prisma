@@ -7,67 +7,233 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Notification {
-  id          Int      @id @default(autoincrement())
-  userId      Int?                                 // null if it's a global (admin broadcast)
-  title       String   @db.VarChar(255)
-  message     String   @db.Text
-  type        String   @default("system")          // e.g. "system", "admin", "image_generated"
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model cart {
+  cart_id       Int       @id @default(autoincrement())
+  user_id       Int?
+  id            Int?
+  quantity      Int
+  name          String
+  price         Decimal   @db.Decimal(10, 2)
+  image_url     String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  selectedColor String
 
-  user        users?   @relation("UserNotifications", fields: [userId], references: [user_id], onDelete: Cascade)
+  @@map("cart")
+}
+
+// ----------------- Users & Notifications -----------------
+model Users {
+  user_id      Int             @id @default(autoincrement())
+  name         String          @db.VarChar(100)
+  email        String          @unique @db.VarChar(100)
+  password     String          @db.VarChar(255)
+  phone        String?         @db.VarChar(20)
+  name         String          @db.VarChar(100)
+  termsStatus  Boolean         @default(false)
+  refreshToken String? 
+  created_at   DateTime        @default(now()) @db.DateTime(0)
+
+  userImages      UserImages[]
+  notifications   Notifications[] @relation("UserNotifications")
+}
+
+model Notifications {
+  id        Int      @id @default(autoincrement())
+  userId    Int?                      
+  title     String   @db.VarChar(255)
+  message   String   @db.Text
+  type      String   @default("system")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user Users? @relation("UserNotifications", fields: [userId], references: [user_id], onDelete: Cascade)
 
   @@index([userId])
   @@index([isRead])
 }
 
-
-model sliderimages {
-  id              Int    @id @default(autoincrement())
-  sliderimage_url String @db.VarChar(255)
-}
-
-model userimages {
+model UserImages {
   id         Int      @id @default(autoincrement())
   user_id    Int      @unique
   image_url  String   @db.VarChar(512)
   created_at DateTime @default(now()) @db.Timestamp(0)
-  users      users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade, map: "userimage_ibfk_1")
 
-  @@index([user_id], map: "user_id")
+  user Users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  @@index([user_id])
 }
 
-model users {
-  user_id      Int                  @id @default(autoincrement())
-  name         String               @db.VarChar(100)
-  email        String               @unique(map: "email") @db.VarChar(100)
-  password     String               @db.VarChar(255)
-  phone        String?              @db.VarChar(20)
-  termsStatus  Boolean              @default(false)
-  refreshToken String? 
-  created_at   DateTime             @default(now()) @db.DateTime(0)
+// ----------------- Slider Images -----------------
+model SliderImages {
+  id              Int    @id @default(autoincrement())
+  sliderimage_url String @db.VarChar(512)
+}
 
-  userimages   userimages[]
-  generated    UserGeneratedImage[]
-  favourites   UserFavouriteTemplate[]
+// ----------------- Categories & Subcategories -----------------
+model Categories {
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(255)
+  image_url    String?       @db.VarChar(512)
+  created_at   DateTime
+  updated_at   DateTime
+
+  subcategories Subcategories[]
+}
+
+model Subcategories {
+  id          Int        @id @default(autoincrement())
+  name        String     @db.VarChar(255)
+  image_url   String?    @db.VarChar(512)
+  category_id Int
+  created_at  DateTime
+  updated_at  DateTime
+
+  category Categories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  products Products[]
+}
+
+// ----------------- Products -----------------
+model Products {
+  id             Int        @id @default(autoincrement())
+  name           String     @db.VarChar(255)
+  image_url      String?    @db.VarChar(512)
+  price          Decimal    @db.Decimal(10, 2)
+  subcategory_id Int
+  stock          String     @db.VarChar(255)
+  created_at     DateTime
+  updated_at     DateTime
+
+  subcategory Subcategories @relation(fields: [subcategory_id], references: [id], onDelete: Cascade)
   
-  // ✅ Add this reverse relation:
-  notifications Notification[]      @relation("UserNotifications")
+  onSaleProducts    OnSaleProducts[]
+  trendingProducts  TrendingProducts[]
+
+  @@index([subcategory_id])
 }
 
+// ----------------- On Sale & Trending Products -----------------
+model OnSaleProducts {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  new_price  Float
+  added_at   DateTime @default(now())
 
-model Apppdffiles {
+  product Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([product_id])
+}
+
+model TrendingProducts {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  added_at   DateTime @default(now())
+
+  product Products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@index([product_id])
+}
+
+// ----------------- Services -----------------
+model Services {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar(255)
+  description String  @db.Text
+  image       String  @db.VarChar(512)
+}
+
+// ----------------- Plumbers -----------------
+model Plumbers {
+  id        Int    @id @default(autoincrement())
+  name      String @db.VarChar(255)
+  contact   String @db.VarChar(20)
+  image_url String @db.VarChar(512)
+  status    String @db.VarChar(50)
+}
+
+// ----------------- Bookings -----------------
+model Bookings {
+  id            Int       @id @default(autoincrement())
+  technician_id Int
+  loginuserid   Int
+  name          String     @db.VarChar(255)
+  email         String?    @db.VarChar(255)
+  phone         String     @db.VarChar(20)
+  city          String     @db.VarChar(100)
+  description   String     @db.Text
+  latitude      Decimal?   @db.Decimal(10, 7)
+  longitude     Decimal?   @db.Decimal(10, 7)
+  created_at    DateTime   @default(now()) @db.Timestamp(0)
+  status        BookingStatus @default(YET_NOT_ACCEPTED)
+
+  @@index([technician_id])
+  @@index([loginuserid])
+}
+
+enum BookingStatus {
+  YET_NOT_ACCEPTED
+  ACCEPTED
+  REJECTED
+}
+
+// ----------------- App Orders -----------------
+enum OrderStatus {
+  IN_PROGRESS
+  VERIFIED
+  COMPLETED
+}
+
+model AppOrders {
+  order_id         Int           @id @default(autoincrement())
+  user_id          Int
+  name             String         @db.VarChar(255)
+  phone            String         @db.VarChar(20)
+  city             String         @db.VarChar(100)
+  address          String         @db.Text
+  receipt_url      String?        @db.VarChar(512)
+  subtotal         Decimal        @db.Decimal(10, 2)
+  shipping_charges Decimal        @db.Decimal(10, 2)
+  total_amount     Decimal        @db.Decimal(10, 2)
+  created_at       DateTime       @default(now()) @db.Timestamp(0)
+  status           OrderStatus    @default(IN_PROGRESS)
+
+  items AppOrderItems[]
+
+  @@index([user_id])
+}
+
+model AppOrderItems {
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  name       String?   @db.VarChar(255)
+  quantity   Int
+  price      Decimal   @db.Decimal(10, 2)
+  created_at DateTime  @default(now()) @db.Timestamp(0)
+
+  order AppOrders @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
+
+  @@index([order_id])
+}
+
+// ----------------- PDF Files -----------------
+model AppPdfFiles {
   id    Int    @id @default(autoincrement())
   title String
   url   String
 }
 
-model FAQ {
+// ----------------- FAQ -----------------
+model FAQs {
   id        Int      @id @default(autoincrement())
   question  String
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CustomerSupportOption {
+  id          Int     @id @default(autoincrement())
+  icons       String
+  headings    String
+  description String
 }

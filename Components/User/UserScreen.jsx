@@ -249,7 +249,7 @@ import SocialIconsRow from "./SocialIconsRow";
 import Loader from "../Loader/Loader";
 import Constants from "expo-constants";
 import { colors } from "../Themes/colors"; // ✅ THEME COLORS
-
+import { apiFetch } from "../../src/apiFetch";
 const API_BASE_URL = Constants.expoConfig.extra.API_BASE_URL;
 
 const UserScreen = () => {
@@ -265,7 +265,7 @@ const UserScreen = () => {
       const storedUserId = await AsyncStorage.getItem("userId");
 
       if (storedUserId) {
-        const response = await fetch(`${API_BASE_URL}/users/${storedUserId}`);
+        const response = await apiFetch(`/users/${storedUserId}`);
         const data = await response.json();
         setUserData(data);
 
